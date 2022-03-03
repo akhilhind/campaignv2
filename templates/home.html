@@ -11,6 +11,12 @@
     <title></title>
     <script>
         $(document).ready(function (e) {
+            var formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+                //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+            });
             // var loc = [0, 733.45, 733.45 * 2, 733.45 * 3, 733.45 * 4];
             // var loc2 = [0, 733.45, 733.45 * 2, 733.45 * 3];
             var loc = [0, 100, 100 * 2, 100 * 3, 100 * 4];
@@ -20,7 +26,7 @@
             var heads2 = ["Instructions", "Inputs", "Inputs", "Insights"];
             var idx = 0, idx2 = 0;
             var maxr = 1, maxr2 = 1;
-            $('#home').on('click', function() {
+            $('#home').on('click', function () {
                 // window.location.replace('http://127.0.0.1:5000');
                 location.reload();
             });
@@ -76,7 +82,7 @@
                 $('#tabhead').text(heads[idx]);
             }
             function update_head2(idx) {
-                console.log('idx=',idx);
+                console.log('idx=', idx);
                 $('#tabhead2').text(heads2[idx]);
             }
             function ajaxCall(data) {
@@ -171,7 +177,7 @@
                     success: function (response) {
                         maxr = 1;
                         console.log(response.features);
-                        $('#myfile_label').text('Population file');
+                        $('#myfile_label').text('Population Data');
                         $('#msg').html('');
                         $('#tabthree').css('background-color', '#fff');
                         $('#tabfour').css('background-color', '#fff');
@@ -327,7 +333,7 @@
                             $('#slidable').css('left', -loc[++idx] + '%');
                             $('#tabthree').css('background-color', '#57eec1');
                             update_head(3);
-                        }, 800);
+                        }, 500);
                         // $('#df_pop').attr('src', '#');
                         // $('#df_pop').attr('src', './files/df_pop.png');
                         // $('#df_test').attr('src', './files/df_test.png');
@@ -458,9 +464,15 @@
                     success: function (response) {
                         for (let [key, value] of Object.entries(response)) {
                             console.log(key, value);
-                            if (key === 'scr_value') {
-                                $(`#${key}`).append(parseFloat(value).toFixed(2));
-                            } else $(`#${key}`).append(parseFloat(value).toFixed(0));
+                            if (key === 'uplift_value' || key === 'total_uplift_value' || key === 'campaign_cost_value') {
+                                $(`#${key}`).html(('' + formatter.format(parseFloat(value))).split('.')[0]);
+                            } else if (key === 'scr_value') {
+                                $(`#${key}`).html(parseFloat(value).toFixed(2));
+                            } else if (key === 'performance_wind_value') {
+                                $(`#${key}`).html(parseFloat(value).toFixed(0) + ' weeks');
+                            } else {
+                                $(`#${key}`).html(parseFloat(value).toFixed(0));
+                            }
                         }
                         setTimeout(() => {
                             $('#slidable2').css('left', -loc2[++idx2] + '%');
@@ -560,7 +572,8 @@
                 <div id="top">
                     <h2>Test-Control Match Pair</h2>
                 </div>
-                <div id="bottom">This tool is used to identify best ‘Control’ match (out of large population) corresponding to a ‘Test’ sample which is part of a marketing campaign
+                <div id="bottom">This tool is used to identify best ‘Control’ match (out of large population)
+                    corresponding to a ‘Test’ sample which is part of a marketing campaign
                 </div>
             </div>
             <div id="right">
@@ -651,7 +664,7 @@
                         <button id="show_insights" class="button">Show Insights</button>
                     </section>
                     <section id="download">
-                        <h2>Download Output</h2>
+                        <h2>Download Test-Control Match Pair</h2>
                         <a href="{{url_for('static',filename='output.csv')}}" download>
                             <button class="button">Download</button>
                         </a>
@@ -716,7 +729,8 @@
                         <div id="cost">
                             <label for="campaign_cost" id="campaign_label">Cost of Campaign</label>
                             <div id="cost_pop">
-                                <input type="number" name="campaign_cost" id="campaign_cost" placeholder="e.g. $10000" min="10000">
+                                <input type="number" name="campaign_cost" id="campaign_cost" placeholder="e.g. $10000"
+                                    min="10000">
                                 <div id="cost_infopop">Total cost including operational and promotional expenses</div>
                             </div>
                         </div>
@@ -725,7 +739,8 @@
                             <label data="weeks" id="input_weeks">
                                 <input type="number" name="performance_window" id="performance_window"
                                     placeholder="e.g. 5" max="1000000">
-                                <div id="performance_infopop">Time frame to measure the campaign impact on revenue/sales</div>
+                                <div id="performance_infopop">Time frame to measure the campaign impact on revenue/sales
+                                </div>
                             </label>
                             <!-- <div id="weekinput">
                                 <span id="week">weeks</span>
@@ -756,7 +771,7 @@
                 <div id="scr"><span id="scr_value"></span>ROI</div>
                 <div id="total"><span id="total_uplift_value">$</span>Total Uplift</div>
                 <div id="cost_campaign"><span id="campaign_cost_value">$</span>Campaign Cost</div>
-                <div id="performance_wind"><span id="performance_wind_value"></span>Performance Window(weeks)</div>
+                <div id="performance_wind"><span id="performance_wind_value"></span>Performance Window</div>
             </div>
             <!-- <div id="cust_in_camp">Customers in campaign: <span id="cust_in_camp_value"></span></div>
             <div id="remdata">

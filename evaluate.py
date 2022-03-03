@@ -54,7 +54,7 @@ kpi['Total uplift']=(df5['uplift'].sum())*len(test_cnt)
 
 
 kpi['campaign cost']=cost
-kpi['ROI']=kpi['Total uplift']/cost
+kpi['ROI']=(kpi['Total uplift']-cost)/cost
 kpi['performance window']=str(period )+' weeks'
 
 print(kpi)
