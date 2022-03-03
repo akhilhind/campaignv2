@@ -1,0 +1,52 @@
+<nav>
+    <h1>Test-Control Match Pair</h1>
+</nav>
+<div id="tiles" class="tiles">
+    <div id="tile1" class="tile">
+        <nav>
+            <h3>Top 5 Observations: Population Data</h3>
+        </nav>
+        <img src="#" alt="name" id="df_pop" />
+    </div>
+    <div id="tile2" class="tile">
+        <nav>
+            <h3>Top 5 Observations: Test Data</h3>
+        </nav>
+        <img src="#" alt="name" id="df_test" />
+    </div>
+    <div id="tile3" class="tile">
+        <div>
+            <h2>Test-Control(2-D)</h2>
+            {% include "graph.html" %}
+        </div>
+    </div>
+    <div id="three_tiles">
+        <h2 id="three_t">Statistics</h2>
+        <div class="hs">
+            <div id="tile4" class="horz tile">
+                <nav>
+                    <h2>Population</h2>
+                </nav>
+                <img src="#" alt="name" id="stats_pop" />
+            </div>
+            <div id="tile5" class="horz tile">
+                <nav>
+                    <h2>Test</h2>
+                </nav>
+                <img src="#" alt="name" id="stats_test" />
+            </div>
+            <div id="tile7" class="horz tile">
+                <nav>
+                    <h2>Control</h2>
+                </nav>
+                <img src="#" alt="name" id="stats_control" />
+            </div>
+        </div>
+    </div>
+    <div id="tile6" class="tile">
+        <nav>
+            <h2>T-Test</h2>
+        </nav>
+        <img src="#" alt="name" id="t_test" />
+    </div>
+</div>

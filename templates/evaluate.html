@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css') }}">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function (e) {
+            function validate() {
+                let camp_val = $('#campaign_cost').val();
+                let perf_val = $('#performance_window').val();
+                if (camp_val.length && perf_val.length) return true;
+                if (camp_val == '') {
+                    $('#campaign_label').html('Please enter Cost of Campaign');
+                    // $('#msg3').css('display', 'inline');
+                    $('#campaign_label').css('font-size', '16px');
+                    $('#campaign_label').addClass('red');
+                    // return false;
+                }
+                if (perf_val == '') {
+                    $('#performance_window_label').html('Please enter Campaign Weeks');
+                    $('#performance_window_label').addClass('red');
+                    $('#performance_window_label').css('font-size', '16px');
+                    // $('#msg4').css('display', 'inline');
+                    // return false;
+                }
+                // return true;
+            }
+            function slideUp(element, height) {
+                console.log(height);
+                $(`#${element}`).animate({
+                    top: `-=${height + 25}`
+                }, 500);
+            };
+            function ajaxCall(data) {
+                console.log(data);
+                $.ajax({
+                    url: '/write',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: JSON.stringify(data),
+                    type: 'post',
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                })
+            }
+            $('#test_control_submit').on('click', function () {
+                var form_data = new FormData();
+                var ins = document.getElementById('test_control_file').files.length;
+                if (ins == 0) {
+                    $('#test_control_label').html('<span style="color:red">Please select Test Control file</span>');
+                    $('#test_control_submit').css('background', '#f44336');
+                    $('#test_control_label').css('font-size', '16px');
+                    return;
+                }
+                for (var x = 0; x < ins; x++) {
+                    form_data.append("files[]", document.getElementById('test_control_file').files[x]);
+                }
+                $.ajax({
+                    url: '/upload',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function (response) {
+                        // console.log(response.features[0]);
+                        $('#test_control_file_name').attr('name', response.features[0]);
+                        let write_obj = {
+                            'action': 'file_name_write',
+                            'data': `${response.features[0]}`
+                        }
+                        ajaxCall(write_obj);
+                        $('#test_control_submit').css('background', '#4CAF50');
+                        $('#test_control_submit').text('Uploaded');
+                        slideUp('camp_main_dummy', $('#camp_main_dummy').height());
+                        slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_tfile').height() + $('#camp_main_dummy').height()+10);
+                    },
+                    error: function (response) {
+                        $('#msg1').html(response.message);
+                    }
+                });
+            });
+            $('#performance_submit').on('click', function () {
+                var form_data = new FormData();
+                var ins = document.getElementById('performance_file').files.length;
+                if (ins == 0) {
+                    $('#performance_label').html('<span style="color:red">Please select test control file</span>');
+                    $('#performance_submit').css('background', '#f44336');
+                    $('#performance_label').css('font-size', '16px');
+                    return;
+                }
+                for (var x = 0; x < ins; x++) {
+                    form_data.append("files[]", document.getElementById('performance_file').files[x]);
+                }
+                $.ajax({
+                    url: '/upload',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function (response) {
+                        $('#performace_file_name').attr('name', response.features[0]);
+                        let write_obj = {
+                            'action': 'file_name_append',
+                            'data': `${response.features[0]}`
+                        }
+                        ajaxCall(write_obj);
+                        $('#performance_submit').css('background', '#4CAF50');
+                        $('#performance_submit').text('Uploaded');
+                        slideUp('camp_main_dummy', $('#camp_main_dummy').height());
+                        slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_pfile').height());
+                    },
+                    error: function (response) {
+                        $('#msg2').html(response.message);
+                    }
+                });
+            });
+            $('#eval_generate').on('click', function () {
+                if (!validate()) return;
+                console.log('inside');
+                $('.lds-roller').css('visibility', 'visible');
+                let data = {
+                    'cost': $('#campaign_cost').val(),
+                    'weeks': $('#performance_window').val()
+                }
+                console.log(data);
+                let write_obj = {
+                    'action': 'data_write',
+                    'data': data
+                }
+                ajaxCall(write_obj);
+                $.ajax({
+                    url: '/run_evaluate',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    type: 'post',
+                    success: function (response) {
+                        for (let [key, value] of Object.entries(response)) {
+                            console.log(key, value);
+                            if(key === 'scr_value') {
+                                $(`#${key}`).html(parseFloat(value).toFixed(2));
+                            } else $(`#${key}`).html(parseFloat(value).toFixed(0));
+                        }
+                        $('#camp_main_right').css('visibility', 'visible');
+                        // $('#eval_generate').html('Generated');
+                        // $('#eval_generate').addClass('disabled');
+                        $('.lds-roller').css('visibility', 'hidden');
+                    }
+                });
+            });
+            $('#camp_dummy_submit').on('click', function() {
+                ajaxCall({'action': 'file_name_right', 'data': 'test_cnt_match_pair.csv'});
+                ajaxCall({'action': 'file_name_append', 'data': 'performance_csv.csv'});
+                // $('#camp_main_left_t').css('z-index', 4);
+                slideUp('camp_main_dummy', $('#camp_main_dummy').height());
+                slideUp('camp_main_left_t', $('#camp_main_dummy').height() + $('#camp_main_left_tfile').height() + $('#camp_main_left_pfile').height() + $('#topdata').height() + 15);
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1 id="camp_head">CAMPAIGN EVALUATION</h1>
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    <main id="camp_main_head">
+        <div class="lefthead" id="camp_head_left">Input</div>
+        <div class="midhead" id="camp_head_right">Insights</div>
+    </main>
+    <div id="camp_main">
+        <div id="camp_main_left">
+            <div id="camp_main_dummy">
+                <label for="camp_dummy_data">Select Dummy Data</label>
+                <select name="camp_dummy_data" id="camp_dummy_data">
+                    <option value="dummy_data1">Dummy Data</option>
+                </select>
+                <button id="camp_dummy_submit" class="button">Select</button>
+            </div>
+            <div id="camp_main_left_t">
+                <div id="topdata" class="topd">
+                    <p class="ordata">OR</p>
+                    <p class="ordata">Upload Custom Data</p>
+                </div>
+                <div id="camp_main_left_tfile" class="block">
+                    <!-- <p id="msg1"> </p> -->
+                    <label for="test_control_file" id="test_control_label">Test-Control Match Pair</label>
+                    <span id="test_control_file_name" class="zero"></span>
+                    <input type="file" name="test_ccaontrol_file" id="test_control_file" class="hidden" />
+                    <button id="test_control_submit" class="button">Upload</button>
+                </div>
+                <div id="camp_main_left_pfile" class="block">
+                    <!-- <p id="msg2"></p> -->
+                    <label for="performance_file" id="performance_label">Performance</label>
+                    <span id="performace_file_name" class="zero"></span>
+                    <input type="file" name="performance_file" id="performance_file" class="hidden" />
+                    <button id="performance_submit" class="button">Upload</button>
+                </div>
+                <div id="camp_main_left_cost" class="block">
+                    <!-- <p id="msg3"></p> -->
+                    <label for="campaign_cost" id="campaign_label">Cost of Campaign</label>
+                    <input type="number" name="campaign_cost" id="campaign_cost" placeholder="e.g. $10000" min="10000">
+                </div>
+                <div id="camp_main_left_performance" class="block">
+                    <label for="performance_window" id="performance_window_label">Evaluation Window</label>
+                    <!-- <p id="msg4"></p> -->
+                    <div id="weekinput">
+                        <input type="number" name="performance_window" id="performance_window" placeholder="e.g. 5"
+                            max="1000000">
+                        <span id="weeks">weeks</span>
+                    </div>
+                </div>
+                <div id="camp_main_left_generate">
+                    <button id="eval_generate" class="button">Generate</button>
+                </div>
+            </div>
+        </div>
+        <div id="camp_main_right">
+            <div id="final_data">
+<!--                <ul id="final_data_left">-->
+<!--                    <li id="uplift">Uplift: </li>-->
+<!--                    <li id="scr">SCR: </li>-->
+<!--                    <li id="total_uplift">Total Uplift: </li>-->
+<!--                    <li id="campaign_cost">Campaign Cost: </li>-->
+<!--                    <li id="performance_wind">Performance Window: </li>-->
+<!--                </ul>-->
+<!--                <ul id="final_data_right">-->
+<!--                    <li id="uplift_value">100</li>-->
+<!--                    <li id="scr_value">10000</li>-->
+<!--                    <li id="total_uplift_value">12.4</li>-->
+<!--                    <li id="campaign_cost_value">1000000000111</li>-->
+<!--                    <li id="performance_wind_value">14141.1</li>-->
+<!--                </ul>-->
+                <div id="cust_in_camp">Customers in campaign: <span id="cust_in_camp_value"></span></div>
+                <div id="remdata">
+                    <div id="uplift">Uplift Per Customer: $<span id="uplift_value">123</span></div>
+                    <div id="scr">ROI: <span id="scr_value">111</span></div>
+                    <div id="total">Total Uplift: $<span id="total_uplift_value">456</span></div>
+                    <div id="cost_campaign">Campaign Cost: $<span id="campaign_cost_value">1234</span></div>
+                    <div id="performance_wind">Performance Window: <span id="performance_wind_value">11111111</span> Weeks</div>
+                </div>
+            </div>
+            <div id="camp_graph">
+                <div id="camp_main_right_top">{% include 'graph_evaluate.html' %}</div>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

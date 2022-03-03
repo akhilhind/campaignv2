@@ -1,0 +1,25 @@
+<html>
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+
+<body>
+<div class="container2">
+    <nav>
+        <h1>Campaign Evaluation Toolkit</h1>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='nagarro.png')}}">
+        </div>
+    </nav>
+    <div class="base">
+        <a href="model">
+            <button class="new_button button1">Test-Control Match Pair</button>
+        </a>
+        <a href="evaluate">
+            <button class="new_button button2">Evaluate Campaign</button>
+        </a>
+    </div>
+</div>
+
+</body>
+</html>

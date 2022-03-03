@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function (e) {
+            function select_unique() {
+                let unique_f = $('input[name="unique_feature"]:checked').val();
+                if (unique_f == undefined) {
+                    $('#unique_msg').text('Please select unique identifier');
+                    return;
+                }
+                console.log(unique_f);
+                $("input.unique_f:radio:not(:checked)").each(function () {
+                    $(this).parent().remove();
+                });
+                $('#unique_select').remove();
+                $('#bottomlast').css('visibility', 'visible');
+                localStorage.setItem('unique_id', unique_f);
+                let feats = localStorage.getItem('features').split(',');
+                $('#pop_ul').html('');
+                $.each(feats, function (key, data) {
+                    if (key > 1 && data != unique_f) {
+                        $('#pop_ul').append('<li><input type="checkbox" value="' + data + '">' + data);
+                    }
+                });
+            }
+            function slideLeft(height) {
+                $('#leftpane').animate({
+                    top: `-=${height}`
+                }, 500);
+            }
+            function hide(element) {
+                console.log(element);
+                $(`#${element}`).slideUp();
+            }
+            function slideUp(element, height) {
+                console.log(height);
+                $(`#${element}`).animate({
+                    top: `-=${height + 25}`
+                }, 500);
+            };
+            $('#submit').on('click', function () {
+                $('#unique_features').css('visibility', 'hidden');
+                // hide('dummy');
+                var form_data = new FormData();
+                var ins = document.getElementById('myfile').files.length;
+                if (ins == 0) {
+                    $('#msg').html('<span style="color:red">Please select population file</span>');
+                    $('#submit').css('background', '#f44336');
+                    return;
+                }
+
+                for (var x = 0; x < ins; x++) {
+                    form_data.append("files[]", document.getElementById('myfile').files[x]);
+                }
+
+                $.ajax({
+                    url: '/upload',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function (response) {
+                        console.log(response.features);
+                        $('#msg').html('');
+                        hide('dummy');
+                        // hide('topdata');
+                        slideUp('leftpane', $('.topdata').height()+10);
+                        $('#pop_ul').html('');
+                        $('#pop_name').attr('name', response.features[0]);
+                        $('#submit').css('background', '#4CAF50');
+                        $('#submit').text('Uploaded');
+                        $('#submit').addClass('disabled');
+                        $('#test').css('visibility', 'visible');
+                        localStorage.setItem('features', response.features);
+                        $('#unique_ul').html('');
+                        // $.each(response.features, function (key, data) {
+                        //     if (key > 0 && key !== 'message') {
+                        //         $('#unique_ul').append('<li><input type="radio" name="unique_feature" value="' + data + '">' + data);
+                        //     }
+                        // });
+                    },
+                    error: function (response) {
+                        $('#msg').html(response.message);
+                    }
+                });
+            });
+            $('#submit2').on('click', function () {
+                var form_data = new FormData();
+                var ins = document.getElementById('testFile').files.length;
+
+                if (ins == 0) {
+                    $('#msg').html('<span style="color:red">Please select test file</span>');
+                    $('#submit2').css('background', '#f44336');
+                    return;
+                }
+
+                for (var x = 0; x < ins; x++) {
+                    form_data.append("files[]", document.getElementById('testFile').files[x]);
+                }
+
+                $.ajax({
+                    url: '/upload',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: form_data,
+                    type: 'post',
+                    success: function (response) {
+                        console.log(response.features);
+                        // select_unique();
+                        $('#msg').html('');
+                        $('#test_ul').html('');
+                        $('#submit2').text('Uploaded');
+                        $('#submit2').addClass('disabled');
+                        $('#test_name').attr('name', response.features[0]);
+                        $('#submit2').css('background', '#4CAF50');
+                        $('#unique_features').css('visibility', 'visible');
+                        // $('#bottomlast').css('visibility', 'visible');
+                        // $.each(response.features, function (key, data) {
+                        //     if (key > 0 && key !== 'message') {
+                        //         console.log(key);
+                        //         $('#test_ul').append('<li><input type="checkbox" value="' + data + '">' + data);
+                        //     }
+                        //     // else {
+                        //     //     $('#msg').append(data + '<br/>');
+                        //     // }
+                        // });
+                        $.each(localStorage.getItem('features').split(','), function (key, data) {
+                            if (key > 0 && key !== 'message') {
+                                $('#unique_ul').append('<li><input type="radio" class="unique_f" name="unique_feature" value="' + data + '">' + data);
+                            }
+                        });
+                        $('#ground').css('visibility', 'visible');
+                        $('#unique_features').css('visibility', 'visible');
+                    },
+                    error: function (response) {
+                        $('#msg').html(response.message);
+                    }
+                });
+            });
+            $('#unique_select').on('click', () => {
+                select_unique();
+                $('#population_features').css('visibility', 'visible');
+            });
+            $('#dummy_select').on('click', function () {
+                hide('top');
+                let option = $('#dummy_d').find(":selected").text();
+                let population = '';
+                let test = '';
+                if (option === 'Dummy Retail Data') {
+                    population = 'dummy_population_data1';
+                    test = 'dummy_test_data1';
+                } else if (option === 'dummy_data2') {
+                    population = 'dummy_population_data2';
+                    test = 'dummy_test_data2';
+                } else if (option === 'dummy_data3') {
+                    population = 'dummy_population_data3';
+                    test = 'dummy_test_data3';
+                }
+                let d_data = {
+                    'population': population,
+                    'test': test
+                }
+                $.ajax({
+                    url: '/get_dummy',
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: JSON.stringify(d_data),
+                    type: 'post',
+                    success: function (response) {
+                        console.log('success');
+                        // $('#tiles').html('');
+                        $('#pop_ul').html('');
+                        $('#unique_features').css('visibility', 'visible');
+                        // $('#population_features').css('visibility', 'visible');
+                        // $('#bottomlast').css('visibility', 'visible');
+                        $('#pop_name').attr('name', response.features[0]);
+                        $('#test_name').attr('name', response.features[1]);
+                        localStorage.setItem('features', response.features);
+                        $('#unique_ul').html('');
+                        $('#dummy_select').addClass('disabled');
+                        $.each(response.features, function (key, data) {
+                            if (key > 1) {
+                                // $('#pop_ul').append('<li><input type="checkbox" value="' + data + '">' + data);
+                                $('#unique_ul').append('<li><input type="radio" class="unique_f" name="unique_feature" value="' + data + '">' + data);
+                            }
+                        });
+                    }
+                });
+
+            });
+            $('#send_data').on('click', function () {
+                var population = [localStorage.getItem('unique_id')];
+                population.splice(0, 0, $('#pop_name').attr('name'));
+                $('#pop_ul input:checked').each(function () {
+                    if ($(this).is(":checked")) {
+                        population.push($(this).attr('value'));
+                    }
+                });
+                console.log(population);
+                if (population.length < 4) {
+                    $('#featureHead').html('Select minimum 2 features');
+                    $('#featureHead').addClass('red');
+                    return;
+                }
+                $('#featureHead').html('Select Features');
+                $('#featureHead').removeClass('red');
+                var test = [];
+                test.push($('#test_name').attr('name'));
+                $('.lds-roller').css('visibility', 'visible');
+                // $('#test_ul input:checked').each(function () {
+                //     if ($(this).is(":checked")) {
+                //         test.push($(this).attr('value'));
+                //     }
+                // });
+                let d_data = {
+                    'population': population,
+                    'test': test
+                }
+                $.ajax({
+                    url: '/send_data',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: JSON.stringify(d_data),
+                    type: 'post',
+                    success: function (response) {
+                        console.log('inside final function');
+                        // console.log(response);
+                        // console.log(typeof (response));
+
+                        for (var key in response) {
+                            if (response.hasOwnProperty(key)) {
+                                console.log(key);
+                                // console.log($(`#${key}`));
+                                $(`#${key}`).attr('src', `data:image/png;base64, ${response[key]}`)
+                                // console.log(response[key]);
+                                // break;
+                            }
+                        }
+                        // $('#df_pop').attr('src', '#');
+                        // $('#df_pop').attr('src', './files/df_pop.png');
+                        // $('#df_test').attr('src', './files/df_test.png');
+                        // $('#tiles').append(response['page']);
+                        $('.tiles').css('visibility', 'visible');
+                        $('#right').css('visibility', 'visible');
+                        $('.lds-roller').css('visibility', 'hidden');
+                        //$('#send_data').html('Generated');
+                        //$('#send_data').addClass('disabled');
+                    }
+                })
+                console.log(test);
+            });
+        });
+
+    </script>
+</head>
+
+<body>
+    <div id="leftpane">
+        <div id="dummy">
+            <div>
+                <label for="dummy_d">Sample Data</label>
+                <span id="dummy_pop_name" class="zero"></span>
+                <span id="dummy_test_name" class="zero"></span>
+                <select name="dummy_data" id="dummy_d">
+                    <option value="dummy1">Dummy Retail Data</option>
+                    <!-- <option value="dummy2">dummy_data2</option>
+                    <option value="dummy3">dummy_data3</option> -->
+                </select>
+            </div>
+            <div>
+                <button id="dummy_select" class="button">Select</button>
+            </div>
+            <div class="bottomline"></div>
+        </div>
+        <p id="msg"></p>
+        <div id="top">
+            <div class="topdata">
+                <p class="ordata">OR</p>
+                <p class="ordata">Upload Custom Data</p>
+            </div>
+            <div id="popuation">
+                <label for="myfile">Population Data</label>
+                <span id="pop_name" class="zero"></span>
+                <input type="file" id="myfile" name="myfile" class="hidden" required />
+                <button type="submit" id="submit" class="button">Upload</button>
+            </div>
+            <div id="test">
+                <label for="testFile">Test Data</label>
+                <span id="test_name" class="zero"></span>
+                <input type="file" id="testFile" name="testFile" class="hidden" required />
+                <button type="submit" id="submit2" class="button">Upload</button>
+            </div>
+        </div>
+        <div id="unique_features">
+            <p id="unique_msg"></p>
+            <h4 id="unique_head">Select Unique Identifier</h4>
+            <div id="isUnique">
+                <ul id="unique_ul"></ul>
+            </div>
+            <button id="unique_select" class="button">Select</button>
+        </div>
+        <div id="bottom">
+            <div id="population_features">
+                <h4 id="featureHead">Select Features</h4>
+                <div id="leftFeatures">
+                    <ul id="pop_ul"></ul>
+                </div>
+            </div>
+        </div>
+        <div id="bottomlast">
+            <button id="send_data" class="button">Generate Control</button>
+            <!-- <input type="button" id='send_data' name="scriptbutton" value=" Generate " onclick="exec('python model.py');"> -->
+        </div>
+    </div>
+</body>
+
+</html>

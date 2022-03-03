@@ -1,0 +1,43 @@
+<div id="tile1">
+    <div class="top4">
+        <nav><h5>Top 5 Observations-Population Data</h5></nav>
+        <img src="{{url_for('get_image', filename='df_pop.png')}}" alt="name" width="304" height="228"/>
+    </div>
+</div>
+<div id="tile2">
+    <div class="top4">
+        <nav><h5>Top 5 Observations-Test Data</h5></nav>
+        <img src="{{url_for('get_image', filename='df_test.png')}}" id="df_test" alt="name" width="304" height="228"/>
+    </div>
+</div>
+<div id="tile3">
+    <div>
+        <h3>Graph</h3>
+        {% include "graph.html" %}
+    </div>
+</div>
+<div id="three_tiles">
+    <h3 id="three_t">Statistics</h3>
+    <div class="hs">
+        <div id="tile7" class="horz">
+            <nav><h3>Population</h3></nav>
+            <img src="{{url_for('get_image', filename='stats_pop.png')}}" alt="name" width="304" height="228"/>
+        </div>
+        <div id="tile4" class="horz">
+            <nav><h3>Test</h3></nav>
+            <img src="{{url_for('get_image', filename='stats_test.png')}}" alt="name" width="304" height="228"/>
+        </div>
+        <div id="tile5" class="horz">
+            <nav><h3>Control</h3></nav>
+            <img src="{{url_for('get_image', filename='stats_control.png')}}" alt="name" width="304" height="228"/>
+        </div>
+
+    </div>
+</div>
+
+<div id="tile6">
+    <div class="top4">
+        <nav><h3>T-Test</h3></nav>
+        <img src="{{url_for('get_image', filename='t_test.png')}}" alt="name" width="304" height="228"/>
+    </div>
+</div>
