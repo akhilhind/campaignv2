@@ -8,6 +8,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://kit.fontawesome.com/67361f458b.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="../static/js/script.js" type="module"></script>
     <title></title>
     <script>
         $(document).ready(function (e) {
@@ -19,34 +21,47 @@
             });
             // var loc = [0, 733.45, 733.45 * 2, 733.45 * 3, 733.45 * 4];
             // var loc2 = [0, 733.45, 733.45 * 2, 733.45 * 3];
-            var loc = [0, 100, 100 * 2, 100 * 3, 100 * 4];
-            var loc2 = [0, 100, 100 * 2, 100 * 3];
-
+            // var loc = [0, 100, 100 * 2, 100 * 3, 100 * 4];
+            // var loc2 = [0, 100, 100 * 2, 100 * 3];
+            // var loc3 = [0, 1044.22, 1044.22*2, 1044.22*3, 1044.22*4, 1044.22*5];
+            var loc3 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
             var heads = ["Instructions", "Inputs", "Inputs", "Insights", "Output"];
             var heads2 = ["Instructions", "Inputs", "Inputs", "Insights"];
-            var idx = 0, idx2 = 0;
+            var nextbuttonids = ["informbutton", "submit", "submit2", "unique_select", "send_data", "reset"];
+            var idx = 0, idx2 = 0, idx3 = 0;
             var maxr = 1, maxr2 = 1;
+            function slideslidable(id) {
+                if(idx3<5) {
+                    $('#slidable').css('left', -loc3[++idx3]+'%');
+                } else {
+                    $('#slidable').css('left', '0');
+                    idx3 = 0;
+                }
+            }
             $('#home').on('click', function () {
                 // window.location.replace('http://127.0.0.1:5000');
                 location.reload();
             });
             $('#left').on('click', function () {
+                $('#screen0').css('display', 'none');
                 $('#bottom').css('top', '100%');
                 $('#top').css('top', '100%');
                 $('#tabone').css('background-color', '#57eec1');
+                $('#screen1').css('display', 'block');
+                $('#title').text('Test-Control Match Pair');
                 setTimeout(() => {
-                    $('#right').css('transform', 'scaleX(0)');
-                    $('#left').css('transform', 'scaleX(0)');
-                    $('#title').text('Test-Control Match Pair');
+                    // $('#right').css('transform', 'scaleX(0)');
+                    // $('#left').css('transform', 'scaleX(0)');
                     // $('#left').css('width', '100%');
                     $('#left').css('border', 'none');
                     $('#left').hover(function () {
                         $('#left').css('transform', 'scale(1)');
                     });
+                    $('#nextbutton').css('display', 'block');
                     setTimeout(() => {
                         $('#left').css('visibility', 'hidden');
                         $('#right').css('display', 'none');
-                        $('#screen1').css('transform', 'scaleX(1)');
+                        // $('#screen1').css('transform', 'scaleX(1)');
                         $('#home').css('display', 'block');
                         // $('#screen1').css('visibility', 'visible');
                     }, 300)
@@ -136,7 +151,7 @@
                 $("input.unique_f:radio:not(:checked)").each(function () {
                     $(this).parent().remove();
                 });
-                $('#unique_select').hide();
+                // $('#unique_select').hide();
                 // $('#bottomlast').css('visibility', 'visible');
                 localStorage.setItem('unique_id', unique_f);
                 let feats = localStorage.getItem('features').split(',');
@@ -148,10 +163,13 @@
                         $('#pop_ul').append('<li><input type="checkbox" value="' + data + '">' + data);
                     }
                 });
-                $('#population_features').css('transform', 'scaleX(1)');
-                $('#send_data').css('visibility', 'visible');
+                // $('#population_features').css('transform', 'scaleX(1)');
+                // $('#send_data').css('visibility', 'visible');
+                $("#unique_select").attr("id", "send_data");
+                slideslidable();
             }
-            $('#submit').on('click', function () {
+            function submit() {
+                console.log('inside submit');
                 $('#unique_features').css('visibility', 'hidden');
                 // hide('dummy');
                 var form_data = new FormData();
@@ -165,7 +183,6 @@
                 for (var x = 0; x < ins; x++) {
                     form_data.append("files[]", document.getElementById('myfile').files[x]);
                 }
-
                 $.ajax({
                     url: '/upload',
                     dataType: 'json',
@@ -179,33 +196,37 @@
                         console.log(response.features);
                         $('#myfile_label').text('Population Data');
                         $('#msg').html('');
-                        $('#tabthree').css('background-color', '#fff');
-                        $('#tabfour').css('background-color', '#fff');
+                        // $('#tabthree').css('background-color', '#fff');
+                        // $('#tabfour').css('background-color', '#fff');
                         // hide('dummy');
                         // hide('topdata');
                         // slideUp('leftpane', $('.topdata').height()+10);
-                        $('#submit2').css('background', 'black');
-                        $('#submit2').text('Upload');
+                        // $('#submit2').css('background', 'black');
+                        // $('#submit2').text('Upload');
                         $('#pop_ul').html('');
                         $('#pop_name').attr('name', response.features[0]);
-                        $('#submit').css('background', '#4CAF50');
-                        $('#submit').text('Uploaded');
+                        // $('#submit').css('background', '#4CAF50');
+                        // $('#submit').text('Uploaded');
                         // $('#submit').addClass('disabled');
-                        $('#test').css('visibility', 'visible');
+                        // $('#test').css('visibility', 'visible');
                         localStorage.setItem('features', response.features);
                         $('#unique_ul').html('');
+                        // slideslidable($(this).attr('id'));
                         // $.each(response.features, function (key, data) {
                         //     if (key > 0 && key !== 'message') {
                         //         $('#unique_ul').append('<li><input type="radio" name="unique_feature" value="' + data + '">' + data);
                         //     }
                         // });
+                        $("#submit").attr("id", "submit2");
+                        slideslidable();
                     },
                     error: function (response) {
                         $('#msg').html(response.message);
                     }
                 });
-            });
-            $('#submit2').on('click', function () {
+                console.log('thanks');
+            }
+            function submit2() {
                 console.log('jajaj');
                 var form_data = new FormData();
                 var ins = document.getElementById('testFile').files.length;
@@ -219,7 +240,7 @@
                 for (var x = 0; x < ins; x++) {
                     form_data.append("files[]", document.getElementById('testFile').files[x]);
                 }
-
+                var yes = false;
                 $.ajax({
                     url: '/upload',
                     dataType: 'json',
@@ -229,24 +250,24 @@
                     data: form_data,
                     type: 'post',
                     success: function (response) {
-                        setTimeout(() => {
-                            $('#slidable').css('left', -loc[++idx] + '%');
-                        }, 800);
+                        // setTimeout(() => {
+                        //     $('#slidable').css('left', -loc[++idx] + '%');
+                        // }, 800);
                         console.log(response.features);
                         // select_unique();
                         $('#msg').html('');
                         $('#unique_select').show();
                         $('#test_ul').html('');
-                        $('#submit2').text('Uploaded');
+                        // $('#submit2').text('Uploaded');
                         // $('#submit2').addClass('disabled');
                         $('#test_name').attr('name', response.features[0]);
-                        $('#submit2').css('background', '#4CAF50');
-                        setTimeout(() => {
-                            $('#submit').css('background-color', '#000');
-                            $('#submit').text('Upload');
-                            $('#submit2').css('background-color', '#000');
-                            $('#submit2').text('Upload');
-                        }, 1000);
+                        // $('#submit2').css('background', '#4CAF50');
+                        // setTimeout(() => {
+                        //     $('#submit').css('background-color', '#000');
+                        //     $('#submit').text('Upload');
+                        //     $('#submit2').css('background-color', '#000');
+                        //     $('#submit2').text('Upload');
+                        // }, 1000);
                         $('#unique_features').css('visibility', 'visible');
                         // $('#bottomlast').css('visibility', 'visible');
                         // $.each(response.features, function (key, data) {
@@ -263,21 +284,22 @@
                                 $('#unique_ul').append('<li><input type="radio" class="unique_f" name="unique_feature" value="' + data + '">' + data);
                             }
                         });
-                        maxr = 2;
-                        console.log('maxr = ', maxr);
+                        // maxr = 2;
+                        // console.log('maxr = ', maxr);
                         $('#ground').css('visibility', 'visible');
                         $('#unique_features').css('visibility', 'visible');
+                        $("#submit2").attr("id", "unique_select");
+                        slideslidable();
                     },
                     error: function (response) {
                         $('#msg').html(response.message);
                     }
                 });
-            });
-            $('#unique_select').on('click', () => {
+            }
+            function unique_select() {
                 select_unique();
-                // $('#population_features').css('visibility', 'visible');
-            });
-            $('#send_data').on('click', function () {
+            }
+            function send_data() {
                 var population = [localStorage.getItem('unique_id')];
                 population.splice(0, 0, $('#pop_name').attr('name'));
                 $('#pop_ul input:checked').each(function () {
@@ -305,7 +327,7 @@
                     'population': population,
                     'test': test
                 }
-                $('#send_data').addClass('disabled');
+                // $('#send_data').addClass('disabled');
                 $.ajax({
                     url: '/send_data',
                     dataType: 'json',
@@ -329,11 +351,11 @@
                                 // break;
                             }
                         }
-                        setTimeout(() => {
-                            $('#slidable').css('left', -loc[++idx] + '%');
-                            $('#tabthree').css('background-color', '#57eec1');
-                            update_head(3);
-                        }, 500);
+                        // setTimeout(() => {
+                        //     $('#slidable').css('left', -loc[++idx] + '%');
+                        //     // $('#tabthree').css('background-color', '#57eec1');
+                        //     update_head(3);
+                        // }, 500);
                         // $('#df_pop').attr('src', '#');
                         // $('#df_pop').attr('src', './files/df_pop.png');
                         // $('#df_test').attr('src', './files/df_test.png');
@@ -341,13 +363,15 @@
                         $('.tiles').css('visibility', 'visible');
                         // $('#right').css('visibility', 'visible');
                         $('.lds-roller').css('visibility', 'hidden');
-                        $('#send_data').removeClass('disabled');
+                        // $('#send_data').removeClass('disabled');
                         //$('#send_data').html('Generated');
+                        $("#send_data").attr("id", "reset");
+                        slideslidable();
                     }
                 })
                 console.log(test);
-            });
-            $('#test_control_submit').on('click', function () {
+            }
+            function test_control_submit() {
                 console.log('inside test_control_submit');
                 var form_data = new FormData();
                 var ins = document.getElementById('test_control_file').files.length;
@@ -376,9 +400,9 @@
                             'data': `${response.features[0]}`
                         }
                         ajaxCall(write_obj);
-                        $('#tabthree2').css('background', '#fff');
+                        // $('#tabthree2').css('background', '#fff');
                         $('#test_control_submit').css('background', '#4CAF50');
-                        $('#test_control_submit').text('Uploaded');
+                        // $('#test_control_submit').text('Uploaded');
                         // slideUp('camp_main_dummy', $('#camp_main_dummy').height());
                         // slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_tfile').height() + $('#camp_main_dummy').height()+10);
                     },
@@ -386,8 +410,8 @@
                         $('#msg1').html(response.message);
                     }
                 });
-            });
-            $('#performance_submit').on('click', function () {
+            }
+            function performance_submit() {
                 var form_data = new FormData();
                 var ins = document.getElementById('performance_file').files.length;
                 if (ins == 0) {
@@ -415,10 +439,10 @@
                         }
                         ajaxCall(write_obj);
                         $('#performance_submit').css('background', '#4CAF50');
-                        $('#performance_submit').text('Uploaded');
+                        // $('#performance_submit').text('Uploaded');
                         setTimeout(() => {
                             $('#slidable2').css('left', -loc2[++idx2] + '%');
-                            $('#tabtwo2').css('background-color', '#57eec1');
+                            // $('#tabtwo2').css('background-color', '#57eec1');
                             maxr2 = 2;
                             idx2 = 2;
                             $('#test_control_submit').css('background', '#000');
@@ -433,8 +457,8 @@
                         $('#msg2').html(response.message);
                     }
                 });
-            });
-            $('#eval_generate').on('click', function () {
+            }
+            function eval_generate() {
                 if (!validate()) return;
                 console.log('inside');
                 $('.lds-roller').css('visibility', 'visible');
@@ -476,7 +500,7 @@
                         }
                         setTimeout(() => {
                             $('#slidable2').css('left', -loc2[++idx2] + '%');
-                            $('#tabthree2').css('background-color', '#57eec1');
+                            // $('#tabthree2').css('background-color', '#57eec1');
                             maxr2 = 3;
                             update_head2(idx2);
                             console.log(idx2);
@@ -487,6 +511,9 @@
                         $('#eval_generate').removeClass('disabled');
                     }
                 });
+            }
+            $('#download_insights').on('click', function() {
+                saveaspdf(`${this}.attr('name')`, `${this}.attr('title')`);
             });
             $('#show_insights').on('click', function () {
                 // $('*').css("transition-duration", "0s");
@@ -519,43 +546,36 @@
             // });
             $('#show_info').on('click', function () {
                 $('#info_frame').css('display', 'block');
+            });     
+            // $('#informbutton').on('click', function() {
+            //     console.log('informbutton called');
+            //     console.log($(this).attr('id'));
+            //     slideslidable($(this).attr('id'));
+            // });
+            $("#informbutton").parent().on("click","#informbutton", function () {
+                console.log("im changing id to btn2 and ho ho ho");
+                $("#informbutton").attr("id", "submit");
+                slideslidable();
             });
-            $('#forward').on('click', function () {
-                console.log(maxr);
-                if (idx < maxr && idx < loc.length - 1) {
-                    idx++;
-                    console.log(idx);
-                    $('#slidable').css('left', -loc[idx] + '%');
-                    if (idx == loc.length - 1) $('#tabfour').css('background-color', '#57eec1');
-                    else if (idx == 1) $('#tabtwo').css('background-color', '#57eec1');
-                    update_head(idx);
-                }
+            $('#informbutton').parent().on('click', '#submit', function() {
+                submit();
+                console.log('546');
             });
-            $('#backward').on('click', function () {
-                if (idx > 0) {
-                    // console.log(idx);
-                    idx--;
-                    $('#slidable').css('left', -loc[idx] + '%');
-                    update_head(idx);
-                }
+            $('#informbutton').parent().on('click', '#submit2', function() {
+                submit2();
+                console.log('submit2 comp');
             });
-            $('#forward2').on('click', function () {
-                console.log(maxr2);
-                if (idx2 < maxr2 && idx2 < loc2.length - 1) {
-                    idx2++;
-                    console.log(idx2);
-                    $('#slidable2').css('left', -loc2[idx2] + '%');
-                    if (idx2 == 1) $('#tabtwo2').css('background-color', '#57eec1');
-                    update_head2(idx2);
-                }
+            $('#informbutton').parent().on('click', '#unique_select', function() {
+                unique_select();
+                console.log('unique_select complete');
             });
-            $('#backward2').on('click', function () {
-                if (idx2 > 0) {
-                    // console.log(idx);
-                    idx2--;
-                    $('#slidable2').css('left', -loc2[idx2] + '%');
-                    update_head2(idx2);
-                }
+            $('#informbutton').parent().on('click', '#send_data', function() {
+                send_data();
+                console.log('send_data complete');
+            });
+            $('#informbutton').parent().on('click', '#reset', function() {
+                slideslidable();
+                console.log('');
             });
         });
     </script>
@@ -568,107 +588,119 @@
     <div class="page">
         <h1 id="title">Campaign Evaluation Toolkit</h1>
         <div id="main">
-            <div id="left">
-                <div id="top">
-                    <h2>Test-Control Match Pair</h2>
+            <div id="screen0">
+                <div id="left">
+                    <div id="top">
+                        <input type="radio" name="top" id="topradio"><span>Test-Control Match Pair</span>
+                    </div>
+                    <!-- <div id="bottom">This tool is used to identify best ‘Control’ match (out of large population)
+                        corresponding to a ‘Test’ sample which is part of a marketing campaign
+                    </div> -->
                 </div>
-                <div id="bottom">This tool is used to identify best ‘Control’ match (out of large population)
-                    corresponding to a ‘Test’ sample which is part of a marketing campaign
-                </div>
-            </div>
-            <div id="right">
-                <div id="rtop">
-                    <h2>Campaign Evaluation</h2>
-                </div>
-                <div id="rbottom">This tool is used to measure the effectiveness of the campaign. It reports the key
-                    performance KPIs of the campaign which can help stakeholders to get insights and make better
-                    business decisions</div>
-            </div>
-        </div>
-        <div id="screen1">
-            <div class="lds-roller">
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-            <div id="forward"><i class="fa-solid fa-angles-right"></i></div>
-            <div id="backward"><i class="fa-solid fa-angles-left"></i></div>
-            <h2 id="tabhead">Instructions</h2>
-            <div class="tabs">
-                <div class="tabdiv">
-                    <span class="i-icon" id="tabone"><i class="fa-solid fa-info" id="firsticon"></i></span>
-                </div>
-                <div class="tabdiv">
-                    <span class="i-icon" id="tabtwo"><i class="fa-solid fa-file-csv"></i></span>
-                </div>
-                <div class="tabdiv">
-                    <span class="i-icon" id="tabthree"><i class="fa-solid fa-chart-line"></i></span>
-                </div>
-                <div class="tabdiv">
-                    <span class="i-icon" id="tabfour"><i class="fa-solid fa-arrow-right-from-bracket"
-                            id="fourthicon"></i></span>
+                <div id="right">
+                    <div id="rtop">
+                        <input type="radio" name="rtop" id="rtopradio"><span>Campaign Evaluation</span>
+                    </div>
+                    <!-- <div id="rbottom">This tool is used to measure the effectiveness of the campaign. It reports the key
+                        performance KPIs of the campaign which can help stakeholders to get insights and make better
+                        business decisions</div> -->
                 </div>
             </div>
-            <div class="content">
-                <div id="slidable">
-                    <section id="information">
-                        <img src="../static/files/info.png" alt="">
-                        <!-- <button id="show_info" class="button">Instructions</button> -->
-                    </section>
-                    <section id="file_upload" class="file_upload">
-                        <div id="popuation">
-                            <label for="myfile" id="myfile_label">Population Data</label>
-                            <span id="pop_name" class="zero"></span>
-                            <input type="file" id="myfile" name="myfile" class="hidden" required />
-                            <button type="submit" id="submit" class="button">Upload</button>
-                            <p class="fileinfo" id="topfileinfo">
-                                CSV file with complete population and the variables that Control needs to be matched on.
-                                The format of this file is same as ‘Test file’
-                            </p>
-                        </div>
-                        <div id="test">
-                            <label for="testFile" id="myfile_test">Test Data</label>
-                            <span id="test_name" class="zero"></span>
-                            <input type="file" id="testFile" name="testFile" class="hidden" required />
-                            <button type="submit" id="submit2" class="button">Upload</button>
-                            <p class="fileinfo" id="bottomfileinfo">
-                                CSV file with ‘Test’ users and the variables that ‘Control’ needs to be matched on
-                            </p>
-                        </div>
-                    </section>
-                    <section id="feature_selection">
-                        <div id="unique_features">
-                            <p id="unique_msg"></p>
-                            <h3 id="unique_head">Select Unique Identifier</h3>
-                            <div id="isUnique">
-                                <ul id="unique_ul"></ul>
+            <div id="nextbutton">
+                <button id="informbutton" class="button nextbutton">Next</button>
+            </div>
+            <div id="screen1">
+                <div class="lds-roller">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <!-- <div id="forward"><i class="fa-solid fa-angles-right"></i></div> -->
+                <!-- <div id="backward"><i class="fa-solid fa-angles-left"></i></div> -->
+                <h2 id="tabhead">Instructions</h2>
+                <div class="tabs">
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabone"><i class="fa-solid fa-info" id="firsticon"></i></span>
+                    </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabtwo"><i class="fa-solid fa-file-csv"></i></span>
+                    </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabthree"><i class="fa-solid fa-chart-line"></i></span>
+                    </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabthree"><i class="fa-solid fa-chart-line"></i></span>
+                    </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabthree"><i class="fa-solid fa-chart-line"></i></span>
+                    </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabfour"><i class="fa-solid fa-arrow-right-from-bracket"
+                                id="fourthicon"></i></span>
+                    </div>
+                </div>
+                <div class="content">
+                    <div id="slidable">
+                        <section id="information">
+                            <img src="../static/files/info.png" alt="">
+                            <!-- <button id="show_info" class="button">Instructions</button> -->
+                        </section>
+                        <section id="pop_file_upload" class="file_upload">
+                            <div id="popuation">
+                                <label for="myfile" id="myfile_label">Population Data</label>
+                                <span id="pop_name" class="zero"></span>
+                                <input type="file" id="myfile" name="myfile" class="hidden" required />
+                                <button type="submit" class="button"><label for="myfile">Upload</label></button>
+                                <p class="fileinfo" id="topfileinfo">
+                                    CSV file with complete population and the variables that Control needs to be matched on.
+                                    The format of this file is same as ‘Test file’
+                                </p>
                             </div>
-                            <button id="unique_select" class="button">Select</button>
-                        </div>
-                        <div id="population_features">
-                            <h3 id="featureHead">Select Features</h3>
-                            <div id="leftFeatures">
-                                <ul id="pop_ul"></ul>
+                        </section>
+                        <section id="test_file_upload" class="file_upload">
+                            <div id="test">
+                                <label for="testFile" id="myfile_test">Test Data</label>
+                                <span id="test_name" class="zero"></span>
+                                <input type="file" id="testFile" name="testFile" class="hidden" required />
+                                <button type="submit" id="submit2" class="button"><label for="testFile">Upload</label></button>
+                                <p class="fileinfo" id="bottomfileinfo">
+                                    CSV file with ‘Test’ users and the variables that ‘Control’ needs to be matched on
+                                </p>
                             </div>
-                            <!-- <button id="feature_select" class="button">Select</button> -->
-                        </div>
-                        <button id="send_data" class="button">Generate Control</button>
-                    </section>
-                    <section id="insights">
-                        <h2>Insights Generated</h2>
-                        <button id="show_insights" class="button">Show Insights</button>
-                    </section>
-                    <section id="download">
-                        <h2>Download Test-Control Match Pair</h2>
-                        <a href="{{url_for('static',filename='output.csv')}}" download>
-                            <button class="button">Download</button>
-                        </a>
-                    </section>
+                        </section>
+                        <section id="unique_feature_selection">
+                            <div id="unique_features">
+                                <p id="unique_msg"></p>
+                                <h3 id="unique_head">Select Unique Identifier</h3>
+                                <div id="isUnique">
+                                    <ul id="unique_ul"></ul>
+                                </div>
+                                <!-- <button id="unique_select" class="button">Select</button> -->
+                            </div>
+                        </section>
+                        <section id="population_feature_selection">
+                            <div id="population_features">
+                                <h3 id="featureHead">Select Features</h3>
+                                <div id="leftFeatures">
+                                    <ul id="pop_ul"></ul>
+                                </div>
+                                <!-- <button id="feature_select" class="button">Select</button> -->
+                            </div>
+                            <!-- <button id="send_data" class="button">Generate Control</button> -->
+                        </section>
+                        <section id="insights_download">
+                            <!-- <h2>Insights Generated</h2> -->
+                            <!-- <button id="show_insights" class="button">Show Insights</button> -->
+                            <!-- <h2>Download Test-Control Match Pair</h2> -->
+                            <button class="button" id="download_insights" title="insights" name="result">Download Insights</button>
+                            <a href="{{url_for('static',filename='output.csv')}}" id="output_download" download>Download Output</a>
+                        </section>
+                    </div>
                 </div>
             </div>
         </div>
@@ -683,8 +715,8 @@
                 <div></div>
                 <div></div>
             </div>
-            <div id="forward2"><i class="fa-solid fa-angles-right"></i></div>
-            <div id="backward2"><i class="fa-solid fa-angles-left"></i></div>
+            <!-- <div id="forward2"><i class="fa-solid fa-angles-right"></i></div> -->
+            <!-- <div id="backward2"><i class="fa-solid fa-angles-left"></i></div> -->
             <h2 id="tabhead2">Instructions</h2>
             <div class="tabs">
                 <div class="tabdiv">
