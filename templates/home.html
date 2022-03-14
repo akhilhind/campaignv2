@@ -581,13 +581,17 @@
                     }
                 });
             }
-            $('#save_insights').on('click', function() {
+
+            $('#download_insights').on('click', function() {
                 // document.body.removeChild('#temp_a');
 
                 console.log('inside download insights');
+                filename = 'test_control_insights.html';
                 data = {
-                    'data': result,
-                    'div': $('#result2').html()
+                    'title': 'Test-Control Insights',
+                    'div': $('#result').html(),
+                    'filename': filename,
+                    'result': 'result'
                 }
                 // saveaspdf(`${this}.attr('name')`, `${this}.attr('title')`);
                 $.ajax({
@@ -604,8 +608,8 @@
                         var element = document.createElement('a');
                         // element.preventDefault();
                         element.setAttribute('target', '_blank');
-                        element.setAttribute('href', '/static/files/insights.html');
-                        element.setAttribute('download', 'insights.html');
+                        element.setAttribute('href', `/static/files/${filename}`);
+                        element.setAttribute('download', filename);
                         element.style.display = 'none';
                         document.body.appendChild(element);
                         element.click();
@@ -616,6 +620,46 @@
                     }
                 });
             });
+
+            $('#save_insights').on('click', function() {
+                // document.body.removeChild('#temp_a');
+
+                console.log('inside download insights');
+                filename = 'evaluation_insights.html'
+                data = {
+                    'title': 'Evaluation Insights',
+                    'div': $('#result2').html(),
+                    'filename': filename,
+                    'result': 'result2'
+                }
+                // saveaspdf(`${this}.attr('name')`, `${this}.attr('title')`);
+                $.ajax({
+                    url: '/saveaspdf',
+                    dataType: 'json',
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    data: JSON.stringify(data),
+                    type: 'post',
+                    success: function (response) {
+                        console.log(response);
+                        console.log('jaihind');
+                        var element = document.createElement('a');
+                        // element.preventDefault();
+                        element.setAttribute('target', '_blank');
+                        element.setAttribute('href', `/static/files/${filename}`);
+                        element.setAttribute('download', filename);
+                        element.style.display = 'none';
+                        document.body.appendChild(element);
+                        element.click();
+                        document.body.removeChild(element);
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+            
             $('#show_insights').on('click', function () {
                 // $('*').css("transition-duration", "0s");
                 $('#result').css('display', 'block');

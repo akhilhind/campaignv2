@@ -192,7 +192,14 @@ def saveaspdf():
     # # pdfkit.from_string('this is a pdf', 'out.pdf')
     # pdfkit.from_string(str(data), 'insights.pdf')
     # print('pdf may be saved')
-
+    file = open('static/css/style.css', 'r')
+    css = file.read()
+    css2 = '''
+    #result, #result2 {
+        display: block;
+    }
+    '''
+    # print(css)
     html = '''<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -201,92 +208,26 @@ def saveaspdf():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="stylesheet" href="../css/style.css">
-        <style>
-        * {
-  box-sizing: border-box;
-  /* transition-duration: 0.3s; */
-  margin: 0;
-  padding: 0;
-  font-family: calibri, roboto,sans-serif;
-}
-
-#insights_body {
-  width: 100%;
-  height: 100vh;
-  background-color: #32363A;
-}
-
-#result2 {
-  z-index: 21;
-  width: 70%;
-  padding: 10px;
-  position: absolute;
-  top: 40px;
-  left: 15%;
-  background: #32363A;
-  border-radius: 20px;
-}
-
-#final_data {
-  width: 100%;
-  /* margin-left: 68%; */
-  /* border: 1px solid #fff; */
-  background: #32363A;
-  outline: none;
-  color: #fff;
-  /* padding: 10px; */
-  border-radius: 20px;
-}
-
-#remdata {
-  font-size: 18px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-#remdata div {
-  flex: 1 0 30%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  margin: 5px;
-  height: 85px;
-  background-color: #fff;
-  color: #000;
-  text-align: center;
-  border-radius: 20px;
-}
-
-#remdata div>span {
-  display: block;
-  font-size: 30px;
-}
-
-
-#camp_graph {
-  transition-duration: 0s;
-  margin-top: 15px;
-  border-radius: 20px;
-  overflow: hidden;
-}
-</style>
-
+        <style> 
+        {css}
+        {css2}
+        </style>
         <script src="https://kit.fontawesome.com/67361f458b.js" crossorigin="anonymous"></script>
-        <title>Insights</title>
+        <title>{title}</title>
     </head>
     <body id="insights_body">
-        <div id="result2">
-    '''
+        <div id="{result}">
+    '''.format(css=css, css2=css2, result=data['result'], title=data['title'])
     # print(data['div'])
     html = html + data['div']
     html = html + '''
     </div>
     </body>
-    </html>'''
-    file_obj = open('static/files/insights.html', 'w')
+    </html>
+    '''
+    file_name = 'static/files/' + data['filename']
+    print(file_name)
+    file_obj = open(file_name, 'w', encoding="utf-8")
     file_obj.write(html)
     resp = jsonify({'action': 'done'})
     return resp
