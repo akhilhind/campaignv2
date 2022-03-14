@@ -26,25 +26,29 @@
             // var loc3 = [0, 1044.22, 1044.22*2, 1044.22*3, 1044.22*4, 1044.22*5];
             var loc3 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
             var loc4 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
-            var heads = ["Instructions", "Inputs", "Inputs", "Insights", "Output"];
-            var heads2 = ["Instructions", "Inputs", "Inputs", "Insights"];
-            var nextbuttonids = ["informbutton", "submit", "submit2", "unique_select", "send_data", "reset"];
+            var heads = ["Instructions", "File Upload", "File Upload", "Unique Identifier", "Feature Selection", "Insights"];
+            var heads2 = ["Instructions", "File Upload", "File Upload", "Cost", "Campaign Period", "Insights"];
+            // var nextbuttonids = ["informbutton", "submit", "submit2", "unique_select", "send_data", "reset"];
             var idx = 0, idx2 = 0, idx3 = 0, idx4 = 0;
             var maxr = 1, maxr2 = 1;
             function slideslidable() {
                 if(idx3<5) {
                     $('#slidable').css('left', -loc3[++idx3]+'%');
+                    $('#tabhead').text(heads[idx3]);
                 } else {
                     $('#slidable').css('left', '0');
                     idx3 = 0;
+                    $('#tabhead').text(heads[idx3]);
                 }
             }
             function slideslidable2() {
                 if(idx4<5) {
                     $('#slidable2').css('left', -loc4[++idx4]+'%');
+                    $('#tabhead2').text(heads2[idx4]);
                 } else {
                     $('#slidable2').css('left', '0');
                     idx4 = 0;
+                    $('#tabhead2').text(heads2[idx4]);
                 }
             }
             $('#home').on('click', function () {
@@ -66,12 +70,12 @@
                     $('#left').hover(function () {
                         $('#left').css('transform', 'scale(1)');
                     });
+                    $('#home').css('display', 'block');
                     $('#nextbutton').css('display', 'block');
                     setTimeout(() => {
                         $('#left').css('visibility', 'hidden');
                         $('#right').css('display', 'none');
                         // $('#screen1').css('transform', 'scaleX(1)');
-                        $('#home').css('display', 'block');
                         // $('#screen1').css('visibility', 'visible');
                     }, 300)
                 }, 400);
@@ -771,7 +775,7 @@
 
 <body id="mybody">
     <div id="logo"><a href="https://www.nagarro.com"><img src="../static/nagarro3.svg" alt="nagarro_logo"></a></div>
-    <i class="fa-solid fa-house-chimney" id="home"></i>
+    <!-- <i class="fa-solid fa-house-chimney" id="home"></i> -->
     <div id="cover"></div>
     <div class="page">
         <h1 id="title">Campaign Evaluation Toolkit</h1>
@@ -797,6 +801,12 @@
             <div id="nextbutton">
                 <button id="informbutton" class="button nextbutton">Next Step</button>
             </div>
+            <div id="nextbutton2">
+                <button id="informbutton2" class="button nextbutton">Next Step</button>
+            </div>
+            <div id="home">
+                <button class="button">Home</button>
+            </div>
             <div id="screen1">
                 <div class="lds-roller">
                     <div></div>
@@ -816,16 +826,16 @@
                         <span class="i-icon" id="tabone"><i class="fa-solid fa-info" id="firsticon"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabtwo"><i class="fa-solid fa-file-csv"></i></span>
+                        <span class="i-icon" id="tabtwo"><i class="fa-solid fa-file-lines"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabthree"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabthree"><i class="fa-solid fa-file-lines"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabfour"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabfour"><i class="fa-solid fa-list"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabfive"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabfive"><i class="fa-solid fa-list"></i></span>
                     </div>
                     <div class="tabdiv">
                         <span class="i-icon" id="tabsix"><i class="fa-solid fa-arrow-right-from-bracket"
@@ -902,9 +912,6 @@
                     <div></div>
                     <div></div>
                 </div>
-                <div id="nextbutton2">
-                    <button id="informbutton2" class="button nextbutton">Next Step</button>
-                </div>
                 <!-- <div id="forward2"><i class="fa-solid fa-angles-right"></i></div> -->
                 <!-- <div id="backward2"><i class="fa-solid fa-angles-left"></i></div> -->
                 <h2 id="tabhead2">Instructions</h2>
@@ -913,19 +920,19 @@
                         <span class="i-icon" id="tabone2"><i class="fa-solid fa-info" id="firsticon"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabtwo2"><i class="fa-solid fa-file-csv"></i></span>
+                        <span class="i-icon" id="tabtwo2"><i class="fa-solid fa-file"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabthree2"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabthree2"><i class="fa-solid fa-file"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabfour2"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabfour2"><i class="fa-solid fa-dollar-sign"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabfive2"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabfive2"><i class="fa-solid fa-calendar-days"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabsix2"><i class="fa-solid fa-chart-line"></i></span>
+                        <span class="i-icon" id="tabsix2"><i class="fa-solid fa-arrow-right-from-bracket"></i></span>
                     </div>
                 </div>
                 <div class="content">
@@ -939,7 +946,7 @@
                                 <label for="test_control_file" id="test_control_label">Test-Control Match Pair</label>
                                 <span id="test_control_file_name" class="zero"></span>
                                 <input type="file" name="test_ccaontrol_file" id="test_control_file" class="hidden" />
-                                <button id="test_control_submit" class="button2"><label for="test_control_file">Upload</label></button>
+                                <button id="test_control_submit" class="button2"><label for="test_control_file">Select File</label></button>
                                 <!-- <p class="fileinfo" id="topfileinfo2">
                                     CSV file with details of the Test-Control match pairs. This is the file produced as an
                                     output of the ‘Test-Control match pair’ module
@@ -951,7 +958,7 @@
                                 <label for="performance_file" id="performance_label">Performance</label>
                                 <span id="performace_file_name" class="zero"></span>
                                 <input type="file" name="performance_file" id="performance_file" class="hidden" />
-                                <button id="performance_submit" class="button2"><label for="performance_file">Upload</label></button>
+                                <button id="performance_submit" class="button2"><label for="performance_file">Select File</label></button>
                                 <!-- <p class="fileinfo" id="bottomfileinfo2">
                                     CSV file with details of the performance of the ‘Test’ and ‘Control’ groups pre and post
                                     campaign

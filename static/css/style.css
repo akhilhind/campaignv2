@@ -27,18 +27,18 @@
 
 #home {
   transition-duration: 0.5s;
-  position: fixed;
-  top: 10px;
-  left: 10px;
+  position: absolute;
+  bottom: 0px;
+  left: 20px;
   color: white;
   font-size: 30px;
   display: none;
-  z-index: 200;
+  z-index: 300;
   cursor: pointer;
 }
 
 #home:hover {
-  transform: scale(1.1);
+  /* transform: scale(1.1); */
   color: #57EEC1;
 }
 
@@ -126,15 +126,18 @@
 
 #nextbutton, #nextbutton2 {
   position: absolute;
-  bottom: 5px;
-  right: 30px;
+  bottom: 0px;
+  right: 20px;
   display: none;
 }
 
 #top, #rtop {
-  font-size: 20px;
+  font-size: 30px;
   margin-left: 10%;
   margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #top {
@@ -235,6 +238,13 @@ h2 {
   top: 6%;
 } */
 
+
+#screen0 {
+  color: #666;
+  margin-top: 30%;
+  padding-left: 20%;
+}
+
 #screen1, #screen2 {
   /* box-shadow: 0px 8px 20px 0px rgb(0 0 0 / 15%); */
   /* background-color: #fff; */
@@ -249,6 +259,7 @@ h2 {
   display: none;
   border-radius: 10px;
   /* transform: scaleX(0); */
+  position: relative;
   transition: transform 500ms ease;
   /* background-color: #8BC6EC;
 background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%); */
@@ -312,6 +323,18 @@ background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%); */
   position: absolute;
   top: 30%;
   left: 35%;
+}
+
+#tabfour i, #tabfive i {
+  left: 30%;
+}
+
+#tabfour2 i {
+  left: 38%;
+}
+
+#tabfive2 i {
+  left: 32%;
 }
 
 #firsticon {
@@ -430,7 +453,7 @@ background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%); */
 }
 
 #cost, #performace {
-  width: 45%;
+  width: 50%;
   /* padding-top: 20px; */
   /* display: flex; */
   /* flex-direction: column; */
@@ -516,8 +539,10 @@ input::-webkit-inner-spin-button {
 }
 
 input[type="radio"], input[type="checkbox"] {
-  margin-right: 5px;
+  margin-right: 10px;
+  transform: scale(1.5);
 }
+
 
 #performance_infopop {
   font-size: 16px;
@@ -549,7 +574,7 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 #cost label, #performace label {
-  font-size: 22px;
+  font-size: 25px;
   width: 100%;
 }
 
@@ -600,7 +625,7 @@ input[type="radio"], input[type="checkbox"] {
 label {
   display: block;
   text-align: center;
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   padding: 8px 20px;
 }
@@ -705,7 +730,7 @@ label {
 h3 {
   display: block;
   /* text-align: center; */
-  font-size: 20px;
+  font-size: 25px;
 }
 
 
@@ -717,7 +742,7 @@ ul {
 }
 
 li {
-  font-size: 18px;
+  font-size: 20px;
   list-style: none;
 }
 
