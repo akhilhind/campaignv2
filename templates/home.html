@@ -90,17 +90,19 @@
                     // $('#left').css('width', '100%');
                     // $('#left').css('border', 'none');
                     // $('#left').hover(function () {
-                    //     $('#left').css('transform', 'scale(1)');
-                    // });
+                        //     $('#left').css('transform', 'scale(1)');
+                        // });
+                    $('#home').css('display', 'block');
                     $('#nextbutton2').css('display', 'block');
-                    setTimeout(() => {
+
+                    // setTimeout(() => {
                         // $('#left').css('visibility', 'hidden');
                         // $('#tabone2').css('background-color', '#57eec1');
                         // $('#right').css('display', 'none');
                         // $('#screen2').css('transform', 'scaleX(1)');
                         // $('#home').css('display', 'block');
                         // $('#screen1').css('visibility', 'visible');
-                    }, 300)
+                    // }, 300)
                 }, 400);
             });
             $('.icon').on('click', function () {
@@ -158,6 +160,7 @@
                 $('#performance_window_label').text('Campaign Weeks');
                 ajaxCall(write_obj);
                 $('#select_cost').attr('id', 'eval_generate');
+                $('#tabfive2').css('background-color', '#24c1e8');
                 slideslidable2();
             }
             function validate_performance() {
@@ -166,7 +169,7 @@
                 if (perf_val == '') {
                     $('#performance_window_label').html('Please enter Campaign Weeks');
                     $('#performance_window_label').addClass('red');
-                    return;
+                    return false;
                 }
                 
                 let data = {
@@ -182,6 +185,7 @@
                 $('#performance_window_label').removeClass('red');
                 $('#performance_window_label').text('Campaign Weeks');
                 ajaxCall(write_obj);
+                return true;
             }
             function select_unique() {
                 let unique_f = $('input[name="unique_feature"]:checked').val();
@@ -263,6 +267,7 @@
                         //         $('#unique_ul').append('<li><input type="radio" name="unique_feature" value="' + data + '">' + data);
                         //     }
                         // });
+                        $('#submit').css('background', '#24c1e8');
                         $('#tabthree').css('background-color', '#24c1e8');
                         $("#submit").attr("id", "submit2");
                         slideslidable();
@@ -335,8 +340,9 @@
                         // console.log('maxr = ', maxr);
                         $('#ground').css('visibility', 'visible');
                         $('#unique_features').css('visibility', 'visible');
+                        $("#submit2").css("background-color", "#24c1e8");
                         $("#submit2").attr("id", "unique_select");
-                        $('#tabfour').css('background-color', '#24c1e8')
+                        $('#tabfour').css('background-color', '#24c1e8');
                         slideslidable();
                     },
                     error: function (response) {
@@ -366,6 +372,7 @@
                 var test = [];
                 test.push($('#test_name').attr('name'));
                 $('.lds-roller').css('visibility', 'visible');
+                $('#send_data').addClass('disabled');
                 // $('#test_ul input:checked').each(function () {
                 //     if ($(this).is(":checked")) {
                 //         test.push($(this).attr('value'));
@@ -411,7 +418,7 @@
                         $('.tiles').css('visibility', 'visible');
                         // $('#right').css('visibility', 'visible');
                         $('.lds-roller').css('visibility', 'hidden');
-                        // $('#send_data').removeClass('disabled');
+                        $('#send_data').removeClass('disabled');
                         //$('#send_data').html('Generated');
                         $('#send_data').html('Reset');
                         $("#send_data").attr("id", "reset");
@@ -455,6 +462,8 @@
                         // $('#test_control_submit').text('Uploaded');
                         // slideUp('camp_main_dummy', $('#camp_main_dummy').height());
                         // slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_tfile').height() + $('#camp_main_dummy').height()+10);
+                        $('#tabthree2').css('background-color', '#24c1e8');
+                        $('#test_control_submit').css('background', '#24c1e8');
                         $('#test_control_submit').attr('id', 'performance_submit');
                         slideslidable2();
                     },
@@ -504,6 +513,8 @@
                         // }, 800);
                         // slideUp('camp_main_dummy', $('#camp_main_dummy').height());
                         // slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_pfile').height());
+                        $('#tabfour2').css('background-color', '#24c1e8');
+                        $('#performance_submit').css('background', '#24c1e8');
                         $('#performance_submit').attr('id', 'select_cost');
                         slideslidable2();
                     },
@@ -565,6 +576,7 @@
                         $('#eval_generate').removeClass('disabled');
                         $('#eval_generate').html('Reset');
                         $('#eval_generate').attr('id', 'reset2');
+                        $('#tabsix2').css('background-color', '#24c1e8');
                         slideslidable2();
                     }
                 });
@@ -666,6 +678,7 @@
             $('#informbutton').parent().on('click', '#reset', function() {
                 slideslidable();
                 $('#reset').html('Next Step');
+                $('#reset').attr('id', 'informbutton');
                 $('#tabsix').css('background-color', '#ccc');
                 $('#tabfive').css('background-color', '#ccc');
                 $('#tabfour').css('background-color', '#ccc');
@@ -693,14 +706,16 @@
                 console.log('unique_select complete');
             });
             $('#informbutton2').parent().on('click', '#eval_generate', function() {
-                validate_performance();
-                eval_generate();
+                if(validate_performance()) {
+                    eval_generate();
+                }
                 console.log('eval_generate complete');
             });
             $('#informbutton2').parent().on('click', '#reset2', function() {
                 slideslidable2();
-                $('#reset').html('Next Step');
-                // $('#tabsix').css('background-color', '#ccc');
+                $('#reset2').html('Next Step');
+                $('#reset2').attr('id', 'informbutton2');
+                $('#tabsix2').css('background-color', '#ccc');
                 $('#tabfive2').css('background-color', '#ccc');
                 $('#tabfour2').css('background-color', '#ccc');
                 $('#tabthree2').css('background-color', '#ccc');
@@ -784,7 +799,7 @@
                                 <label for="myfile" id="myfile_label">Population Data</label>
                                 <span id="pop_name" class="zero"></span>
                                 <input type="file" id="myfile" name="myfile" class="hidden" required />
-                                <button type="submit" class="button"><label for="myfile" tabindex="-1">Select File</label></button>
+                                <button type="submit" class="button2"><label for="myfile" tabindex="-1">Select File</label></button>
                                 <!-- <p class="fileinfo" id="topfileinfo">
                                     CSV file with complete population and the variables that Control needs to be matched on.
                                     The format of this file is same as ‘Test file’
@@ -796,7 +811,7 @@
                                 <label for="testFile" id="myfile_test">Test Data</label>
                                 <span id="test_name" class="zero"></span>
                                 <input type="file" id="testFile" name="testFile" class="hidden" required />
-                                <button type="submit" id="submit2" class="button"><label for="testFile">Select File</label></button>
+                                <button type="submit" id="submit2" class="button2"><label for="testFile">Select File</label></button>
                                 <p class="fileinfo" id="bottomfileinfo">
                                     CSV file with ‘Test’ users and the variables that ‘Control’ needs to be matched on
                                 </p>
@@ -865,6 +880,9 @@
                     <div class="tabdiv">
                         <span class="i-icon" id="tabfive2"><i class="fa-solid fa-chart-line"></i></span>
                     </div>
+                    <div class="tabdiv">
+                        <span class="i-icon" id="tabsix2"><i class="fa-solid fa-chart-line"></i></span>
+                    </div>
                 </div>
                 <div class="content">
                     <div id="slidable2">
@@ -877,7 +895,7 @@
                                 <label for="test_control_file" id="test_control_label">Test-Control Match Pair</label>
                                 <span id="test_control_file_name" class="zero"></span>
                                 <input type="file" name="test_ccaontrol_file" id="test_control_file" class="hidden" />
-                                <button id="test_control_submit" class="button"><label for="test_control_file">Upload</label></button>
+                                <button id="test_control_submit" class="button2"><label for="test_control_file">Upload</label></button>
                                 <!-- <p class="fileinfo" id="topfileinfo2">
                                     CSV file with details of the Test-Control match pairs. This is the file produced as an
                                     output of the ‘Test-Control match pair’ module
@@ -889,7 +907,7 @@
                                 <label for="performance_file" id="performance_label">Performance</label>
                                 <span id="performace_file_name" class="zero"></span>
                                 <input type="file" name="performance_file" id="performance_file" class="hidden" />
-                                <button id="performance_submit" class="button"><label for="performance_file">Upload</label></button>
+                                <button id="performance_submit" class="button2"><label for="performance_file">Upload</label></button>
                                 <!-- <p class="fileinfo" id="bottomfileinfo2">
                                     CSV file with details of the performance of the ‘Test’ and ‘Control’ groups pre and post
                                     campaign
