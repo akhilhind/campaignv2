@@ -8,6 +8,7 @@ import subprocess
 import asyncio
 import glob
 import base64
+import pdfkit
 
 
 loop = asyncio.get_event_loop()
@@ -172,14 +173,123 @@ def write_file():
     elif data['action'] == 'file_name_write':
         file_obj = open('static/uploads/file.txt', 'w')
         file_obj.write(data['data']+'\n')
-    elif data['action'] == 'data_write':
+    elif data['action'] == 'write_cost':
         file_obj = open('static/uploads/data.txt', 'w')
-        file_obj.write(data['data']['cost']+'\n')
-        file_obj.write(data['data']['weeks']+'\n')
+        file_obj.write(data['data']['cost_or_week']+'\n')
+    elif data['action'] == 'write_weeks':
+        file_obj = open('static/uploads/data.txt', 'a')
+        file_obj.write(data['data']['cost_or_week']+'\n')
     file_obj.close()
     resp = jsonify({'action': 'done'})
     return resp
 
+
+@app.route('/saveaspdf', methods=['POST'])
+def saveaspdf():
+    data = json.loads(request.data)
+    # print(data)
+    # print('about to save pdf')
+    # # pdfkit.from_string('this is a pdf', 'out.pdf')
+    # pdfkit.from_string(str(data), 'insights.pdf')
+    # print('pdf may be saved')
+
+    html = '''<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="../css/style.css">
+        <style>
+        * {
+  box-sizing: border-box;
+  /* transition-duration: 0.3s; */
+  margin: 0;
+  padding: 0;
+  font-family: calibri, roboto,sans-serif;
+}
+
+#insights_body {
+  width: 100%;
+  height: 100vh;
+  background-color: #32363A;
+}
+
+#result2 {
+  z-index: 21;
+  width: 70%;
+  padding: 10px;
+  position: absolute;
+  top: 40px;
+  left: 15%;
+  background: #32363A;
+  border-radius: 20px;
+}
+
+#final_data {
+  width: 100%;
+  /* margin-left: 68%; */
+  /* border: 1px solid #fff; */
+  background: #32363A;
+  outline: none;
+  color: #fff;
+  /* padding: 10px; */
+  border-radius: 20px;
+}
+
+#remdata {
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+#remdata div {
+  flex: 1 0 30%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin: 5px;
+  height: 85px;
+  background-color: #fff;
+  color: #000;
+  text-align: center;
+  border-radius: 20px;
+}
+
+#remdata div>span {
+  display: block;
+  font-size: 30px;
+}
+
+
+#camp_graph {
+  transition-duration: 0s;
+  margin-top: 15px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+</style>
+
+        <script src="https://kit.fontawesome.com/67361f458b.js" crossorigin="anonymous"></script>
+        <title>Insights</title>
+    </head>
+    <body id="insights_body">
+        <div id="result2">
+    '''
+    # print(data['div'])
+    html = html + data['div']
+    html = html + '''
+    </div>
+    </body>
+    </html>'''
+    file_obj = open('static/files/insights.html', 'w')
+    file_obj.write(html)
+    resp = jsonify({'action': 'done'})
+    return resp
 
 # app.run('localhost', 9001)
 

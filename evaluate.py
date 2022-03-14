@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
+import plotly
 
 file = open("static/uploads/file.txt","r")
 file1 = open("static/uploads/data.txt","r")
@@ -40,6 +41,7 @@ fig.update_layout(yaxis_title="Sales($)")
 # fig.show()
 
 fig.write_html("templates/graph_evaluate.html")
+# plotly.offline.plot(fig, filename='templates/graph_evaluate.html')
 
 # Calculate KPIs
 df3['uplift']=df3['T']-df3['C']

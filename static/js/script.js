@@ -1,4 +1,4 @@
-import {jsPDF} from '../../node_modules/jspdf';
+import {jsPDF} from 'jspdf';
 
 function saveaspdf(divId, title) {
     console.log('thanks');
