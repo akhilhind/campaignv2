@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/static/css/style.css">
     <script src="https://kit.fontawesome.com/67361f458b.js" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="../static/js/script.js" type="module"></script>
     <title></title>
     <script>
         $(document).ready(function (e) {
@@ -26,8 +25,8 @@
             // var loc3 = [0, 1044.22, 1044.22*2, 1044.22*3, 1044.22*4, 1044.22*5];
             var loc3 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
             var loc4 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
-            var heads = ["Instructions", "File Upload", "File Upload", "Unique Identifier", "Feature Selection", "Insights"];
-            var heads2 = ["Instructions", "File Upload", "File Upload", "Cost", "Campaign Period", "Insights"];
+            var heads = ["Instructions", "Upload Population Data", "Upload Test Data", "Unique Identifier", "Feature Selection", "Insights"];
+            var heads2 = ["Instructions", "Upload Test-Control Data", "Upload Performance Data", "Cost", "Campaign Period", "Insights"];
             var nextbuttonids = ["informbutton", "submit", "submit2", "unique_select", "send_data", "reset"];
             var nextbuttonids2 = ["informbutton2", "test_control_submit", "performance_submit", "select_cost", "eval_generate", "reset2"];
             var idx = 0, idx2 = 0, idx3 = 0, idx4 = 0;
@@ -47,6 +46,7 @@
                     } 
                     if(idx3 == 0) $('#prevbutton').css('display', 'none');
                     $(`#${nextbuttonids[idx3+1]}`).attr('id', nextbuttonids[idx3]);
+                    if(idx3 == 4) $(`#${nextbuttonids[idx3]}`).text('Next Step');
                 }
                 console.log(idx3);
                 $('#tabhead').text(heads[idx3]);
@@ -66,6 +66,7 @@
                     } 
                     if(idx4 == 0) $('#prevbutton2').css('display', 'none');
                     $(`#${nextbuttonids2[idx4+1]}`).attr('id', nextbuttonids2[idx4]);
+                    if(idx4 == 4) $(`#${nextbuttonids2[idx4]}`).text('Next Step');
                 }
                 $('#tabhead2').text(heads2[idx4]);
             }
@@ -162,8 +163,9 @@
                     $('#campaign_label').html('Please enter Cost of Campaign');
                     $('#campaign_label').addClass('red');
                     return;
-                } else if(parseInt(camp_val) < 1000) {
-                    $('#campaign_label').html('Itna kam paisa gareeb insaan');
+                } else if(parseInt(camp_val) <= 0) {
+                    // $('#campaign_label').html('Itna kam paisa gareeb insaan');
+                    $('#campaign_label').html('Cost must be greater than 0');
                     $('#campaign_label').addClass('red');
                     return;
                 }
@@ -179,7 +181,7 @@
                 $('#campaign_label').removeClass('red');
                 $('#campaign_label').text('Cost of Campaign');
                 $('#performance_window_label').removeClass('red');
-                $('#performance_window_label').text('Campaign Weeks');
+                $('#performance_window_label').text('Campaign Evaluation Weeks');
                 ajaxCall(write_obj);
                 $('#select_cost').attr('id', 'eval_generate');
                 $('#tabfive2').css('background-color', '#24c1e8');
@@ -353,6 +355,7 @@
                         //     //     $('#msg').append(data + '<br/>');
                         //     // }
                         // });
+                        $('#unique_ul').html('');
                         $.each(localStorage.getItem('features').split(','), function (key, data) {
                             if (key > 0 && key !== 'message') {
                                 $('#unique_ul').append('<li><input type="radio" class="unique_f" name="unique_feature" value="' + data + '">' + data);
@@ -395,6 +398,7 @@
                 test.push($('#test_name').attr('name'));
                 $('.lds-roller').css('visibility', 'visible');
                 $('#send_data').addClass('disabled');
+                $('#backbutton').addClass('disabled');
                 // $('#test_ul input:checked').each(function () {
                 //     if ($(this).is(":checked")) {
                 //         test.push($(this).attr('value'));
@@ -441,6 +445,7 @@
                         // $('#right').css('visibility', 'visible');
                         $('.lds-roller').css('visibility', 'hidden');
                         $('#send_data').removeClass('disabled');
+                        $('#backbutton').removeClass('disabled');
                         //$('#send_data').html('Generated');
                         $('#send_data').html('Finish');
                         $("#send_data").attr("id", "reset");
@@ -565,6 +570,7 @@
 
                 // ajaxCall(write_obj);
                 $('#eval_generate').addClass('disabled');
+                $('#backbutton2').addClass('disabled');
                 $.ajax({
                     url: '/run_evaluate',
                     dataType: 'json',
@@ -596,6 +602,7 @@
                         // $('#eval_generate').html('Generated');
                         $('.lds-roller').css('visibility', 'hidden');
                         $('#eval_generate').removeClass('disabled');
+                        $('#backbutton2').removeClass('disabled');
                         $('#eval_generate').html('Finish');
                         $('#eval_generate').attr('id', 'reset2');
                         $('#tabsix2').css('background-color', '#24c1e8');
@@ -749,14 +756,15 @@
                 console.log('send_data complete');
             });
             $('#informbutton').parent().on('click', '#reset', function() {
-                slideslidable(1);
-                $('#reset').html('Next Step');
-                $('#reset').attr('id', 'informbutton');
-                $('#tabsix').css('background-color', '#ccc');
-                $('#tabfive').css('background-color', '#ccc');
-                $('#tabfour').css('background-color', '#ccc');
-                $('#tabthree').css('background-color', '#ccc');
-                $('#tabtwo').css('background-color', '#ccc');
+                location.reload();
+                // slideslidable(1);
+                // $('#reset').html('Next Step');
+                // $('#reset').attr('id', 'informbutton');
+                // $('#tabsix').css('background-color', '#ccc');
+                // $('#tabfive').css('background-color', '#ccc');
+                // $('#tabfour').css('background-color', '#ccc');
+                // $('#tabthree').css('background-color', '#ccc');
+                // $('#tabtwo').css('background-color', '#ccc');
             });
             
 
@@ -786,14 +794,15 @@
                 console.log('eval_generate complete');
             });
             $('#informbutton2').parent().on('click', '#reset2', function() {
-                slideslidable2(1);
-                $('#reset2').html('Next Step');
-                $('#reset2').attr('id', 'informbutton2');
-                $('#tabsix2').css('background-color', '#ccc');
-                $('#tabfive2').css('background-color', '#ccc');
-                $('#tabfour2').css('background-color', '#ccc');
-                $('#tabthree2').css('background-color', '#ccc');
-                $('#tabtwo2').css('background-color', '#ccc');
+                location.reload();
+                // slideslidable2(1);
+                // $('#reset2').html('Next Step');
+                // $('#reset2').attr('id', 'informbutton2');
+                // $('#tabsix2').css('background-color', '#ccc');
+                // $('#tabfive2').css('background-color', '#ccc');
+                // $('#tabfour2').css('background-color', '#ccc');
+                // $('#tabthree2').css('background-color', '#ccc');
+                // $('#tabtwo2').css('background-color', '#ccc');
             });
         });
     </script>
@@ -828,13 +837,13 @@
                 <button id="informbutton" class="button nextbutton">Next Step</button>
             </div>
             <div id="prevbutton">
-                <button id="backbutton" class="button prevbutton">Previous Step</button>
+                <button id="backbutton" class="button prevbutton">Previous</button>
             </div>
             <div id="nextbutton2">
                 <button id="informbutton2" class="button nextbutton">Next Step</button>
             </div>
             <div id="prevbutton2">
-                <button id="backbutton2" class="button prevbutton">Previous Step</button>
+                <button id="backbutton2" class="button prevbutton">Previous</button>
             </div>
             <div id="home">
                 <button class="button">Home</button>
@@ -884,20 +893,20 @@
                             <div id="popuation">
                                 <label for="myfile" id="myfile_label">Population Data</label>
                                 <span id="pop_name" class="zero"></span>
-                                <input type="file" id="myfile" name="myfile" class="hidden" required />
-                                <button type="submit" class="button2"><label for="myfile" tabindex="-1">Select File</label></button>
-                                <!-- <p class="fileinfo" id="topfileinfo">
+                                <input type="file" id="myfile" name="myfile" class="" required />
+                                <!-- <button type="submit" class="button2"><label for="myfile" tabindex="-1">Select File</label></button> -->
+                                <p class="fileinfo" id="topfileinfo">
                                     CSV file with complete population and the variables that Control needs to be matched on.
                                     The format of this file is same as ‘Test file’
-                                </p> -->
+                                </p>
                             </div>
                         </section>
                         <section id="test_file_upload" class="file_upload">
                             <div id="test">
                                 <label for="testFile" id="myfile_test">Test Data</label>
                                 <span id="test_name" class="zero"></span>
-                                <input type="file" id="testFile" name="testFile" class="hidden" required />
-                                <button type="submit" id="submit2" class="button2"><label for="testFile">Select File</label></button>
+                                <input type="file" id="testFile" name="testFile" class="" required />
+                                <!-- <button type="submit" id="submit2" class="button2"><label for="testFile">Select File</label></button> -->
                                 <p class="fileinfo" id="bottomfileinfo">
                                     CSV file with ‘Test’ users and the variables that ‘Control’ needs to be matched on
                                 </p>
@@ -952,10 +961,10 @@
                         <span class="i-icon" id="tabone2"><i class="fa-solid fa-info" id="firsticon"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabtwo2"><i class="fa-solid fa-file"></i></span>
+                        <span class="i-icon" id="tabtwo2"><i class="fa-solid fa-file-lines"></i></span>
                     </div>
                     <div class="tabdiv">
-                        <span class="i-icon" id="tabthree2"><i class="fa-solid fa-file"></i></span>
+                        <span class="i-icon" id="tabthree2"><i class="fa-solid fa-file-lines"></i></span>
                     </div>
                     <div class="tabdiv">
                         <span class="i-icon" id="tabfour2"><i class="fa-solid fa-dollar-sign"></i></span>
@@ -977,8 +986,8 @@
                             <div id="test_control">
                                 <label for="test_control_file" id="test_control_label">Test-Control Match Pair</label>
                                 <span id="test_control_file_name" class="zero"></span>
-                                <input type="file" name="test_ccaontrol_file" id="test_control_file" class="hidden" />
-                                <button id="test_control_submit" class="button2"><label for="test_control_file">Select File</label></button>
+                                <input type="file" name="test_control_file" id="test_control_file" class="" />
+                                <!-- <button id="test_control_submit" class="button2"><label for="test_control_file">Select File</label></button> -->
                                 <!-- <p class="fileinfo" id="topfileinfo2">
                                     CSV file with details of the Test-Control match pairs. This is the file produced as an
                                     output of the ‘Test-Control match pair’ module
@@ -989,8 +998,8 @@
                             <div id="weeks">
                                 <label for="performance_file" id="performance_label">Performance</label>
                                 <span id="performace_file_name" class="zero"></span>
-                                <input type="file" name="performance_file" id="performance_file" class="hidden" />
-                                <button id="performance_submit" class="button2"><label for="performance_file">Select File</label></button>
+                                <input type="file" name="performance_file" id="performance_file" class="" />
+                                <!-- <button id="performance_submit" class="button2"><label for="performance_file">Select File</label></button> -->
                                 <!-- <p class="fileinfo" id="bottomfileinfo2">
                                     CSV file with details of the performance of the ‘Test’ and ‘Control’ groups pre and post
                                     campaign

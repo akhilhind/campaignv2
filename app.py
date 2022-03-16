@@ -8,7 +8,6 @@ import subprocess
 import asyncio
 import glob
 import base64
-import pdfkit
 
 
 loop = asyncio.get_event_loop()
@@ -177,8 +176,11 @@ def write_file():
         file_obj = open('static/uploads/data.txt', 'w')
         file_obj.write(data['data']['cost_or_week']+'\n')
     elif data['action'] == 'write_weeks':
-        file_obj = open('static/uploads/data.txt', 'a')
-        file_obj.write(data['data']['cost_or_week']+'\n')
+        file_obj = open('static/uploads/data.txt', 'r')
+        cost = file_obj.readline()
+        file_obj.close()
+        file_obj = open('static/uploads/data.txt', 'w')
+        file_obj.write(cost + data['data']['cost_or_week']+'\n')
     file_obj.close()
     resp = jsonify({'action': 'done'})
     return resp
@@ -215,7 +217,7 @@ def saveaspdf():
         <script src="https://kit.fontawesome.com/67361f458b.js" crossorigin="anonymous"></script>
         <title>{title}</title>
     </head>
-    <body id="insights_body">
+    <body id="insights_body" onload="window.print()">
         <div id="{result}">
     '''.format(css=css, css2=css2, result=data['result'], title=data['title'])
     # print(data['div'])

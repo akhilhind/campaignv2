@@ -630,6 +630,7 @@ input[type="radio"], input[type="checkbox"] {
   /* cursor: pointer; */
   position: relative;
   transition-duration: 0.3s;
+  align-items: center;
 }
 
 .zero,
@@ -693,7 +694,6 @@ label {
 }
 
 
-
 .fileinfo {
   width: 80%;
   left: 10%;
@@ -704,6 +704,21 @@ label {
   transition-duration: 0.3s;
 }
 
+input[type="file"] {
+  font-size: 20px;
+}
+
+#myfile, #testFile {
+  margin-left: 15%;
+}
+
+#test_control_file, #performance_file {
+  margin-left: 15%;
+}
+
+/* #testFile {
+  margin-left: 20%;
+} */
 /* #popuation:hover,
 #test:hover, #test_control:hover, #weeks:hover {
   background-color: #57eec1;
@@ -807,6 +822,7 @@ li {
   border-radius: 20px;
 }
 
+
 #final_data {
   width: 100%;
   /* margin-left: 68%; */
@@ -862,7 +878,7 @@ li {
 
 /* tiles */
 #tiles {
-  height: 85vh;
+  /* height: 85vh; */
   overflow: auto;
   margin: auto;
   width: 70%;
