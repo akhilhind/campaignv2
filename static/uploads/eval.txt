@@ -1,1 +1,1 @@
-{"uplift_value": "211.43083344090195", "scr_value": "1.3492314826766882", "total_uplift_value": "211430.83344090194", "campaign_cost_value": "90000", "performance_wind_value": "7", "cust_in_camp_value": "1000"}
+{"uplift_value": "289.5871738334725", "scr_value": "1.632610671213386", "total_uplift_value": "289587.1738334725", "campaign_cost_value": "110000", "performance_wind_value": "17", "cust_in_camp_value": "1000"}

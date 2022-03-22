@@ -12,7 +12,6 @@ import base64
 
 loop = asyncio.get_event_loop()
 
-# model = pickle.load(open('model.pkl', 'rb'))
 
 UPLOAD_FOLDER = 'static/uploads'
 IMAGE_FOLDER = 'files'
@@ -22,33 +21,32 @@ ALLOWED_EXTENSIONS = {'csv'}
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+
+# Homepage
 @app.route('/')
 def home():
     return render_template('home.html')
 
-@app.route('/model')
-def model():
-    return render_template('index.html')
 
-@app.route('/evaluate')
-def evaluate():
-    return render_template('evaluate.html')
-
+# Function for checking extension of uploaded files
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
+# Async function running model.py and evaluate.py
 async def run_model(filename):
     print('inside run_model')
     subprocess.run(["python", filename])
 
 
+# 404 Handler
 @app.errorhandler(404)
 def not_found(e):
     return render_template('error_404.html')
 
 
+# Function for uploading population, test, test-control and performance file on server
 @app.route('/upload', methods=['POST'])
 def upload():
     if 'files[]' not in request.files:
@@ -57,7 +55,6 @@ def upload():
         return resp
 
     files = request.files.getlist('files[]')
-
     errors = {}
     success = False
     my_list = []
@@ -73,11 +70,6 @@ def upload():
         else:
             errors[file.filename] = 'File type is not allowed'
 
-    # if success and errors:
-    #     errors['message'] = 'File(s) successfully uploaded'
-    #     resp = jsonify(errors)
-    #     resp.status_code = 206
-    #     return resp
     if success:
         resp = jsonify({'message': 'Files successfully uploaded', 'features': my_list})
         resp.status_code = 201
@@ -88,6 +80,7 @@ def upload():
         return resp
 
 
+# Function sending selected features data
 @app.route('/send_data', methods=['POST'])
 def send_data():
     file_data = json.loads(request.data)
@@ -107,24 +100,19 @@ def send_data():
     print(test_data)
     pop_data.to_csv('./files/population.csv',index=False)
     test_data.to_csv('./files/test.csv',index=False)
-    # d_data = [pop_data, test_data]
-    # receive_data(pop_data, test_data)
     loop.run_until_complete(run_model("model.py"))
     print('loop completed')
     images = {}
     for filename in glob.iglob(IMAGE_FOLDER + '**/*.png', recursive=True):
-        # print(os.path.basename(filename))
         with open(filename, mode='rb') as file:
             img = file.read()
             images[os.path.basename(filename).split('.')[0]] = base64.encodebytes(img).decode('utf-8')
     for key in images:
         print(key)
-    # page = {'page': render_template('tiles.html')}
-    # resp = {'message': 'thanks'}
     return jsonify(images)
-    # return pop_data.to_json()
 
 
+# Function for fetching features
 @app.route('/get_dummy', methods=['POST'])
 def get_dummy():
     file_data = json.loads(request.data)
@@ -138,6 +126,7 @@ def get_dummy():
     return resp
 
 
+# Function for running evaluate.py
 @app.route('/run_evaluate', methods=['POST'])
 def run_evaluate():
     print('inside evaluate')
@@ -150,18 +139,7 @@ def run_evaluate():
     return data
 
 
-@app.route('/show/tiles')
-def get_tiles():
-    return render_template('tiles.html')
-
-
-@app.route('/files/<filename>')
-def get_image(filename):
-    # print('inside get_image')
-    # print(send_from_directory(IMAGE_FOLDER, filename))
-    return send_from_directory(IMAGE_FOLDER, filename, as_attachment=True)
-
-
+# Function for writing week and cost in files
 @app.route('/write', methods=['POST'])
 def write_file():
     data = json.loads(request.data)
@@ -186,14 +164,10 @@ def write_file():
     return resp
 
 
+# Function for saving result and result2 (html files)
 @app.route('/saveaspdf', methods=['POST'])
 def saveaspdf():
     data = json.loads(request.data)
-    # print(data)
-    # print('about to save pdf')
-    # # pdfkit.from_string('this is a pdf', 'out.pdf')
-    # pdfkit.from_string(str(data), 'insights.pdf')
-    # print('pdf may be saved')
     file = open('static/css/style.css', 'r')
     css = file.read()
     css2 = '''
@@ -201,7 +175,6 @@ def saveaspdf():
         display: block;
     }
     '''
-    # print(css)
     html = '''<!DOCTYPE html>
     <html lang="en">
     <head>
@@ -220,7 +193,6 @@ def saveaspdf():
     <body id="insights_body" onload="window.print()">
         <div id="{result}">
     '''.format(css=css, css2=css2, result=data['result'], title=data['title'])
-    # print(data['div'])
     html = html + data['div']
     html = html + '''
     </div>
@@ -234,11 +206,10 @@ def saveaspdf():
     resp = jsonify({'action': 'done'})
     return resp
 
-# app.run('localhost', 9001)
-
 
 if __name__ == "__main__":
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     app.config["CACHE_TYPE"] = "null"
     app.run(debug=True)
+    # app.run(host='0.0.0.0', port=5678, debug=False)

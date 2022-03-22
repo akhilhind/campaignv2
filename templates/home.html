@@ -15,8 +15,6 @@
             var formatter = new Intl.NumberFormat('en-US', {
                 style: 'currency',
                 currency: 'USD',
-                //minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-                //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
             });
             // var loc = [0, 733.45, 733.45 * 2, 733.45 * 3, 733.45 * 4];
             // var loc2 = [0, 733.45, 733.45 * 2, 733.45 * 3];
@@ -230,6 +228,8 @@
                 let feats = localStorage.getItem('features').split(',');
                 console.log('feats = ', feats);
                 $('#pop_ul').html('');
+                $('#unique_head').text('Select Unique Identifier');
+                $('#unique_head').css('color', '#000');
                 $.each(feats, function (key, data) {
                     if (key > 0 && data != unique_f) {
                         console.log(data);
@@ -250,7 +250,7 @@
                 var ins = document.getElementById('myfile').files.length;
                 if (ins == 0) {
                     $('#myfile_label').html('<span style="color:red">Please select population file</span>');
-                    $('#submit').css('background', '#f44336');
+                    // $('#submit').css('background', '#f44336');
                     return;
                 }
 
@@ -291,7 +291,7 @@
                         //         $('#unique_ul').append('<li><input type="radio" name="unique_feature" value="' + data + '">' + data);
                         //     }
                         // });
-                        $('#submit').css('background', '#24c1e8');
+                        // $('#submit').css('background', '#24c1e8');
                         $('#tabthree').css('background-color', '#24c1e8');
                         $("#submit").attr("id", "submit2");
                         slideslidable(1);
@@ -308,8 +308,8 @@
                 var ins = document.getElementById('testFile').files.length;
 
                 if (ins == 0) {
-                    $('#myfile_test').html('<span style="color:red">Please select test file</span>');
-                    $('#submit2').css('background', '#f44336');
+                    $('#myfile_test').html('<span style="color:red">Please select Test File</span>');
+                    // $('#submit2').css('background', '#f44336');
                     return;
                 }
 
@@ -345,6 +345,8 @@
                         //     $('#submit2').text('Upload');
                         // }, 1000);
                         $('#unique_features').css('visibility', 'visible');
+                        $('#myfile_test').html('<span>Test Data</span>');
+
                         // $('#bottomlast').css('visibility', 'visible');
                         // $.each(response.features, function (key, data) {
                         //     if (key > 0 && key !== 'message') {
@@ -441,6 +443,8 @@
                         // $('#df_pop').attr('src', './files/df_pop.png');
                         // $('#df_test').attr('src', './files/df_test.png');
                         // $('#tiles').append(response['page']);
+                        $('#featureHead').html('Select features');
+                        $('#featureHead').removeClass('red');
                         $('.tiles').css('visibility', 'visible');
                         // $('#right').css('visibility', 'visible');
                         $('.lds-roller').css('visibility', 'hidden');
@@ -461,7 +465,7 @@
                 var ins = document.getElementById('test_control_file').files.length;
                 if (ins == 0) {
                     $('#test_control_label').html('<span style="color:red">Please select Test Control file</span>');
-                    $('#test_control_submit').css('background', '#f44336');
+                    // $('#test_control_submit').css('background', '#f44336');
                     // $('#test_control_label').css('font-size', '16px');
                     return;
                 }
@@ -491,7 +495,7 @@
                         // slideUp('camp_main_dummy', $('#camp_main_dummy').height());
                         // slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_tfile').height() + $('#camp_main_dummy').height()+10);
                         $('#tabthree2').css('background-color', '#24c1e8');
-                        $('#test_control_submit').css('background', '#24c1e8');
+                        // $('#test_control_submit').css('background', '#24c1e8');
                         $('#test_control_submit').attr('id', 'performance_submit');
                         slideslidable2(1);
                     },
@@ -505,7 +509,7 @@
                 var ins = document.getElementById('performance_file').files.length;
                 if (ins == 0) {
                     $('#performance_label').html('<span style="color:red">Please select Performance file</span>');
-                    $('#performance_submit').css('background', '#f44336');
+                    // $('#performance_submit').css('background', '#f44336');
                     // $('#performance_label').css('font-size', '16px');
                     return;
                 }
@@ -542,7 +546,8 @@
                         // slideUp('camp_main_dummy', $('#camp_main_dummy').height());
                         // slideUp('camp_main_left_t', $('#topdata').height() + $('#camp_main_left_pfile').height());
                         $('#tabfour2').css('background-color', '#24c1e8');
-                        $('#performance_submit').css('background', '#24c1e8');
+                        $('#performance_label').html('<span">Performance</span>');
+                        // $('#performance_submit').css('background', '#24c1e8');
                         $('#performance_submit').attr('id', 'select_cost');
                         slideslidable2(1);
                     },
@@ -614,7 +619,6 @@
 
             $('#download_insights').on('click', function() {
                 // document.body.removeChild('#temp_a');
-
                 console.log('inside download insights');
                 filename = 'test_control_insights.html';
                 data = {
@@ -636,7 +640,6 @@
                         console.log(response);
                         console.log('jaihind');
                         var element = document.createElement('a');
-                        // element.preventDefault();
                         element.setAttribute('target', '_blank');
                         element.setAttribute('href', `/static/files/${filename}`);
                         element.setAttribute('download', filename);
@@ -952,7 +955,7 @@
                             <!-- <button id="show_insights" class="button">Show Insights</button> -->
                             <!-- <h2>Download Test-Control Match Pair</h2> -->
                             <button class="button" id="download_insights" title="insights" name="result">Download Insights</button>
-                            <a href="{{url_for('static',filename='output.csv')}}" id="output_download" download>Download Output</a>
+                            <a href="{{url_for('static',filename='test_control_match_pair.csv')}}" id="output_download" download>Download Output</a>
                         </section>
                     </div>
                 </div>
