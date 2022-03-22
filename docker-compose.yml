@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  ab_testing:
+    build: .
+    container_name: ab_testing
+    restart: always
+    environment: 
+      - APP_NAME=flaskapp
+    expose:
+      - 5001

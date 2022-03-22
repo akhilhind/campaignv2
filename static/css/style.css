@@ -147,7 +147,7 @@
 }
 
 #top, #rtop {
-  font-size: 30px;
+  font-size: 38px;
   margin-left: 10%;
   margin-top: 20px;
   display: flex;
@@ -257,7 +257,7 @@ h2 {
 #screen0 {
   color: #666;
   margin-top: 30%;
-  padding-left: 20%;
+  padding-left: 15%;
 }
 
 #screen1, #screen2 {
@@ -404,6 +404,7 @@ background-image: linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%); */
   width: 600%;
   position: absolute;
   top: 0;
+  height: 380px;
   left: 0;
   display: flex;
   flex-direction: row;
@@ -749,6 +750,12 @@ input[type="file"] {
   padding: 10px;
   padding-left: 60px;
   transition-duration: 0.3s;
+}
+
+#isUnique {
+  padding-left: 5px;
+  height: 325px;
+  overflow: auto;
 }
 
 /* #population_features {

@@ -26,7 +26,7 @@
             var loc3 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
             var loc4 = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100*5];
             var heads = ["Instructions", "Upload Population Data", "Upload Test Data", "Unique Identifier", "Feature Selection", "Insights"];
-            var heads2 = ["Instructions", "Upload Test-Control Data", "Upload Performance Data", "Cost", "Campaign Period", "Insights"];
+            var heads2 = ["Instructions", "Upload Test-Control Data", "Upload Performance Data", "Cost", "Performance Period", "Insights"];
             var nextbuttonids = ["informbutton", "submit", "submit2", "unique_select", "send_data", "reset"];
             var nextbuttonids2 = ["informbutton2", "test_control_submit", "performance_submit", "select_cost", "eval_generate", "reset2"];
             var idx = 0, idx2 = 0, idx3 = 0, idx4 = 0;
@@ -181,7 +181,7 @@
                 $('#campaign_label').removeClass('red');
                 $('#campaign_label').text('Cost of Campaign');
                 $('#performance_window_label').removeClass('red');
-                $('#performance_window_label').text('Campaign Evaluation Weeks');
+                $('#performance_window_label').text('Campaign Evaluation Window');
                 ajaxCall(write_obj);
                 $('#select_cost').attr('id', 'eval_generate');
                 $('#tabfive2').css('background-color', '#24c1e8');
@@ -205,7 +205,7 @@
                     'data': data
                 }
                 $('#campaign_label').removeClass('red');
-                $('#campaign_label').text('Cost of Campaign');
+                $('#campaign_label').text('Cost of Campaign (Operation + Promotion');
                 $('#performance_window_label').removeClass('red');
                 $('#performance_window_label').text('Campaign Weeks');
                 ajaxCall(write_obj);
@@ -479,6 +479,7 @@
                     success: function (response) {
                         // console.log(response.features[0]);
                         $('#test_control_file_name').attr('name', response.features[0]);
+                        $('#test_control_label').html('<span>Test-Control Match Pair</span>');
                         let write_obj = {
                             'action': 'file_name_write',
                             'data': `${response.features[0]}`
@@ -648,6 +649,20 @@
                         console.log(response);
                     }
                 });
+            });
+
+            $('#myfile').change(function() {
+                $('#submit').click();
+            });
+            $("#testFile").change(function() {
+                $('#submit2').click();
+            });
+
+            $('#test_control_file').change(function() {
+                $('#test_control_submit').click();
+            });
+            $('#performance_file').change(function() {
+                $('#performance_submit').click();
             });
 
             $('#save_insights').on('click', function() {
