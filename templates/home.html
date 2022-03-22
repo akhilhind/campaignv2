@@ -189,7 +189,7 @@
                 let perf_val = $('#performance_window').val();
                 // if (perf_val.length) return true;
                 if (perf_val == '') {
-                    $('#performance_window_label').html('Please enter Campaign Weeks');
+                    $('#performance_window_label').html('Please enter Campaign Performance Window');
                     $('#performance_window_label').addClass('red');
                     return false;
                 }
@@ -203,9 +203,9 @@
                     'data': data
                 }
                 $('#campaign_label').removeClass('red');
-                $('#campaign_label').text('Cost of Campaign (Operation + Promotion');
+                $('#campaign_label').text('Cost of Campaign');
                 $('#performance_window_label').removeClass('red');
-                $('#performance_window_label').text('Campaign Weeks');
+                $('#performance_window_label').text('Campaign Performance Window');
                 ajaxCall(write_obj);
                 return true;
             }
